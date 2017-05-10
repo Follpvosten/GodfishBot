@@ -25,6 +25,7 @@ import org.telegram.telegrambots.api.methods.send.SendAudio;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -110,7 +111,7 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 					document.setCaption(result.text);
 				    if(result.replyToId != -1)
 					document.setReplyToMessageId(result.replyToId);
-				    sendDocument(document);
+				    cmd.processSendResult(result.imageUrl, sendDocument(document).getDocument().getFileId());
 				} else {
 				    SendPhoto photo = new SendPhoto()
 					.setChatId(update.getMessage().getChatId())
@@ -119,25 +120,29 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 					photo.setCaption(result.text);
 				    if(result.replyToId != -1)
 					photo.setReplyToMessageId(result.replyToId);
-				    sendPhoto(photo);
+				    cmd.processSendResult(result.imageUrl, sendPhoto(photo).getPhoto().get(0).getFileId());
 				}
 			    } catch(IOException | TelegramApiException e) {
 				e.printStackTrace();
 			    }
 			} else if(result.audioUrl != null) {
 			    try {
-				InputStream stream =
-					getClass().getResource(result.audioUrl).openStream();
-				SendAudio audio = new SendAudio()
-					.setChatId(update.getMessage().getChatId())
-					.setNewAudio("audio.ogg", stream);
+                                SendVoice voice = new SendVoice()
+                                    .setChatId(update.getMessage().getChatId());
+                                if(result.mediaId == null) { 
+                                    InputStream stream =
+                                        getClass().getResource(result.audioUrl).openStream();
+                                    voice.setNewVoice("audio.ogg", stream);
+                                } else {
+                                    voice.setVoice(result.mediaId);
+                                }
 				if(result.text != null)
-				    audio.setCaption(result.text);
+				    voice.setCaption(result.text);
 				if(result.replyToId != -1)
-				    audio.setReplyToMessageId(result.replyToId);
-				cmd.processSendResult(sendAudio(audio).getAudio().getFileId());
+				    voice.setReplyToMessageId(result.replyToId);
+				cmd.processSendResult(result.audioUrl, sendVoice(voice).getVoice().getFileId());
 			    } catch(IOException | TelegramApiException e) {
-				    e.printStackTrace();
+                                e.printStackTrace();
 			    }
 			} else {
 			    // It's a text message

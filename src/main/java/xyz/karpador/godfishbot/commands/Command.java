@@ -31,5 +31,5 @@ public abstract class Command {
     public abstract String getUsage();
     public abstract String getDescription();
     public abstract CommandResult getReply(String params, Message message, String myName);
-    public void processSendResult(String id) {}
+    public void processSendResult(String mediaUrl, String mediaId) {}
 }

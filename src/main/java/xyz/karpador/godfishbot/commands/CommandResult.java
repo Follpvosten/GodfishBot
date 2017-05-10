@@ -27,6 +27,7 @@ public class CommandResult {
     public String text = null;
     public boolean isGIF = false;
     public int replyToId = -1;
+    public String mediaId = null;
     
     public CommandResult() {}
     public CommandResult(String text) {

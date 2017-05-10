@@ -24,6 +24,8 @@ import org.telegram.telegrambots.api.objects.Message;
  * @author Follpvosten
  */
 public class TruthahnCommand extends Command {
+    
+    private String mediaId = null;
 
     @Override
     public String getName() {
@@ -44,7 +46,13 @@ public class TruthahnCommand extends Command {
     public CommandResult getReply(String params, Message message, String myName) {
 	CommandResult result = new CommandResult();
 	result.audioUrl = "/audio/truthahn.ogg";
+        result.mediaId = mediaId;
 	return result;
+    }
+
+    @Override
+    public void processSendResult(String audioUrl, String mediaId) {
+        this.mediaId = mediaId;
     }
     
 }
