@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import org.telegram.telegrambots.api.methods.send.SendAudio;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
@@ -42,7 +41,8 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
       new ExplodeCommand(), new HugCommand(), new FlauschCommand(),
       new TrumpCommand(), new RikkaCommand(), new GifCommand(),
       new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
-      new TruthahnCommand(), new HeuldochCommand(), new BoaheyCommand() };
+      new TruthahnCommand(), new HeuldochCommand(), new BoaheyCommand(),
+      new MLPCommand() };
     
     private final HashMap<String, Command> commands;
     private String myName = null;

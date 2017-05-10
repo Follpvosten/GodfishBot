@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import static java.net.HttpURLConnection.HTTP_OK;
 import java.net.URL;
+import java.net.URLEncoder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,21 +34,21 @@ import xyz.karpador.godfishbot.Main;
  *
  * @author Follpvosten
  */
-public class GofCommand extends Command {
+public class MLPCommand extends Command {
 
     @Override
     public String getName() {
-	return "gof";
+	return "mlp";
     }
 
     @Override
     public String getUsage() {
-	return "/gof <tag>";
+	return "/mlp <tags>";
     }
 
     @Override
     public String getDescription() {
-	return "Get a GIF from gifbase (by search query)";
+	return "Get a face from MyLittleFaceWhen.\n<tags>: Search tags separated by commas";
     }
 
     @Override
@@ -56,52 +57,31 @@ public class GofCommand extends Command {
 	    return new CommandResult(getUsage() + "\n" + getDescription());
 	CommandResult result = new CommandResult();
 	try {
-	    String urlString = "http://gifbase.com/tag/" + params + "?format=json";
+	    if(!params.endsWith(","))
+		params += ",";
+	    String urlString =
+		    "http://mylittlefacewhen.com/api/v3/face/"
+		    + "?tags__all=" + URLEncoder.encode(params, "UTF-8")
+		    + "&limit=100&accepted=true&format=json";
 	    URL url = new URL(urlString);
 	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
-	    con.setConnectTimeout(4000);
 	    if(con.getResponseCode() == HTTP_OK) {
 		BufferedReader br = 
 			    new BufferedReader(
 				new InputStreamReader(con.getInputStream())
 			    );
-		String httpResult = "";
-		String line;
-		while((line = br.readLine()) != null)
-		    httpResult += line;
-		JSONObject resultJson = new JSONObject(httpResult);
-		int pageCount = resultJson.optInt("page_count", 1);
-		if(pageCount > 1) {
-		    int page = Main.Random.nextInt(pageCount - 1) + 1;
-		    if(page != resultJson.getInt("page_current")) {
-			urlString += "&p=" + page;
-			url = new URL(urlString);
-			con = (HttpURLConnection)url.openConnection();
-			con.setConnectTimeout(4000);
-			if(con.getResponseCode() == HTTP_OK) {
-			    br = new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-			    httpResult = "";
-			    while((line = br.readLine()) != null)
-				httpResult += line;
-			    resultJson = new JSONObject(httpResult);
-			}
-		    }
-		}
-		JSONArray gifs = resultJson.optJSONArray("gifs");
-		if(gifs != null) {
-		    JSONObject gif = gifs.getJSONObject(Main.Random.nextInt(gifs.length()));
-		    result.imageUrl = gif.getString("url");
-		} else
-		    return null;
+		String httpResult = br.readLine();
+		JSONArray jsonResult = new JSONObject(httpResult).getJSONArray("objects");
+		int randIndex = Main.Random.nextInt(jsonResult.length());
+		JSONObject jsonObj = jsonResult.getJSONObject(randIndex);
+		result.imageUrl = "http://mylittlefacewhen.com" + jsonObj.getString("image");
+		if(result.imageUrl.toLowerCase().endsWith(".gif"))
+		    result.isGIF = true;
 	    }
 	} catch(IOException | JSONException e) {
 	    e.printStackTrace();
 	    return null;
 	}
-	if(result.imageUrl == null) return null;
-	result.isGIF = true;
 	return result;
     }
     
