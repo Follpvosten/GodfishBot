@@ -38,7 +38,7 @@ import xyz.karpador.godfishbot.Main;
  */
 public class FlauschCommand extends Command {
     
-    private ArrayList<String> imgUrls = null;
+    private ArrayList<String[]> imgUrls = null;
     private Date lastRefreshDate = new Date();
     
     private static final String[] BLOCKTAGS =
@@ -71,7 +71,7 @@ public class FlauschCommand extends Command {
 	if(imgUrls == null
 	|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600)) {
 	    imgUrls = new ArrayList<>();
-	    // Liste mit Bildern von Pixabay befüllen
+	    // Populate the list with pixabay URLs
 	    try {
 		for(int j = 1; j < 10; j++) {
 		    URL url = new URL("https://pixabay.com/api/"
@@ -95,7 +95,10 @@ public class FlauschCommand extends Command {
 			    JSONObject currentImg = hits.getJSONObject(i);
 			    String tags = currentImg.getString("tags");
 			    if(stringContainsAny(tags, BLOCKTAGS)) continue;
-			    imgUrls.add(currentImg.getString("webformatURL"));
+			    imgUrls.add(new String[] {
+				currentImg.getString("webformatURL"),
+				null
+			    });
 			}
 			lastRefreshDate = new Date();
 		    }
@@ -106,8 +109,20 @@ public class FlauschCommand extends Command {
 	    }
 	}
 	CommandResult result = new CommandResult();
-	result.imageUrl = imgUrls.get(Main.Random.nextInt(imgUrls.size()));
+	String[] data = imgUrls.get(Main.Random.nextInt(imgUrls.size()));
+	result.imageUrl = data[0];
+	result.mediaId = data[1];
 	return result;
+    }
+
+    @Override
+    public void processSendResult(String mediaUrl, String mediaId) {
+	for(String[] image : imgUrls) {
+	    if(image[0].equals(mediaUrl)) {
+		image[1] = mediaId;
+		return;
+	    }
+	}
     }
     
 }

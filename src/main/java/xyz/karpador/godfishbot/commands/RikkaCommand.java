@@ -79,7 +79,8 @@ public class RikkaCommand extends Command {
 				JSONObject currentImg = imgs.getJSONObject(i);
 				imgUrls.add(new String[] {
 				    currentImg.getString("url_thumb"),
-				    currentImg.getString("url_image")
+				    currentImg.getString("url_image"),
+				    null
 				});
 			    }
 			}
@@ -94,7 +95,18 @@ public class RikkaCommand extends Command {
 	String[] image = imgUrls.get(Main.Random.nextInt(imgUrls.size()));
 	result.imageUrl = image[0];
 	result.text = image[1];
+	result.mediaId = image[2];
 	return result;
+    }
+
+    @Override
+    public void processSendResult(String mediaUrl, String mediaId) {
+	for(String[] image : imgUrls) {
+	    if(image[0].equals(mediaUrl)) {
+		image[2] = mediaId;
+		return;
+	    }
+	}
     }
     
 }
