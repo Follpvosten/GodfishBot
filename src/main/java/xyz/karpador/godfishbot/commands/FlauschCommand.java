@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
+import xyz.karpador.godfishbot.AsyncFileHelper;
 import xyz.karpador.godfishbot.BotConfig;
 import xyz.karpador.godfishbot.Main;
 
@@ -41,10 +42,19 @@ public class FlauschCommand extends Command {
     private ArrayList<String[]> imgUrls = null;
     private Date lastRefreshDate = new Date();
     
+    private final AsyncFileHelper fileHelper;
+    
     private static final String[] BLOCKTAGS =
     { "baby", "child", "chicken", "figure", "keinohrhase", "man", "cat",
       "gold foil", "girl", "paddle board" };
 
+    public FlauschCommand() {
+	fileHelper = new AsyncFileHelper("flausch.json");
+	if(fileHelper.fileExists()) {
+	    fileHelper.startRead();
+	}
+    }
+    
     @Override
     public String getName() {
 	return "flausch";
@@ -68,8 +78,28 @@ public class FlauschCommand extends Command {
 
     @Override
     public CommandResult getReply(String params, Message message, String myName) {
+	if(imgUrls == null) {
+	    String fileContent = fileHelper.getReadData();
+	    if(fileContent != null) {
+		try {
+		    JSONObject fileJson = new JSONObject(fileContent);
+		    JSONArray urlsData = fileJson.getJSONArray("urls");
+		    imgUrls = new ArrayList<>();
+		    for(int i = 0; i < urlsData.length(); i++) {
+			JSONArray values = urlsData.getJSONArray(i);
+			imgUrls.add(new String[] {
+			    values.getString(0),
+			    values.optString(1, null)
+			});
+		    }
+		    lastRefreshDate = new Date(fileJson.getLong("refresh_date"));
+		} catch(JSONException e) {
+		    e.printStackTrace();
+		}
+	    }
+	}
 	if(imgUrls == null
-	|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600)) {
+	|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600 * 1000)) {
 	    imgUrls = new ArrayList<>();
 	    // Populate the list with pixabay URLs
 	    try {
@@ -101,6 +131,7 @@ public class FlauschCommand extends Command {
 			    });
 			}
 			lastRefreshDate = new Date();
+			writeCurrentState();
 		    }
 		}
 	    } catch(IOException | JSONException e) {
@@ -114,12 +145,31 @@ public class FlauschCommand extends Command {
 	result.mediaId = data[1];
 	return result;
     }
+    
+    private void writeCurrentState() {
+	try {
+	    JSONObject jsonObj = new JSONObject();
+	    jsonObj.put("refresh_date", lastRefreshDate.getTime());
+	    JSONArray urls = new JSONArray();
+	    for(String[] values : imgUrls) {
+		JSONArray url = new JSONArray(values);
+		urls.put(url);
+	    }
+	    jsonObj.put("urls", urls);
+	    fileHelper.startWrite(jsonObj.toString());
+	} catch(JSONException e) {
+	    e.printStackTrace();
+	}
+    }
 
     @Override
     public void processSendResult(String mediaUrl, String mediaId) {
 	for(String[] image : imgUrls) {
 	    if(image[0].equals(mediaUrl)) {
-		image[1] = mediaId;
+		if(image[1] == null) {
+		    image[1] = mediaId;
+		    writeCurrentState();
+		}
 		return;
 	    }
 	}

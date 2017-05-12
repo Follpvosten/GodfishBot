@@ -27,13 +27,13 @@ import xyz.karpador.godfishbot.Main;
 public class ExplodeCommand extends Command {
     
     private static final String[] EXPLODE_AT_MESSAGES =
-    { "%1s exploded all over %2s's face", "%1s blew up at %2s", "%1s kamikaze'd %2s",
-      "%1s blew up %2s's house", "%1s used Explosion! %2s fainted!",
-      "%1s ate a grenade from %2s" };
+    { "%1$s exploded all over %2$s's face", "%1$s blew up at %2$s", "%1$s kamikaze'd %2$s",
+      "%1$s blew up %2$s's house", "%1$s used Explosion! %2$s fainted!",
+      "%1$s ate a grenade from %2$s" };
     private static final String[] EXPLODE_MESSAGES =
-    { "%1s exploded", "%1s blew up", "%1s detonated", "%1s used Explosion!",
-      "%1s used Self-Destruct!", "%1s played minesweeper in real-life",
-      "%1s ate a grenade" };
+    { "%1$s exploded", "%1$s blew up", "%1$s detonated", "%1$s used Explosion!",
+      "%1$s used Self-Destruct!", "%1$s played minesweeper in real-life",
+      "%1$s ate a grenade" };
 
     @Override
     public String getName() {
