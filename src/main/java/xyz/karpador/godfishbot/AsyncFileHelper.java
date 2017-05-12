@@ -27,8 +27,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,11 +107,12 @@ public class AsyncFileHelper {
 		} catch (InterruptedException ex) {
 		    Logger.getLogger(AsyncFileHelper.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	try (AsynchronousFileChannel afc = AsynchronousFileChannel.open(path,
-		StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
+	try {
+	    currentAfc = AsynchronousFileChannel.open(path,
+		StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 	    dataBuffer = ByteBuffer.wrap(content.getBytes(StandardCharsets.UTF_8));
-	    currentResult = afc.write(dataBuffer, 0);
-	} catch(Exception e) {
+	    currentResult = currentAfc.write(dataBuffer, 0);
+	} catch(IOException e) {
 	    e.printStackTrace();
 	}
     }
