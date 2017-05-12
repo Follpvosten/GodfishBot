@@ -1,9 +1,9 @@
 {
     "api_tokens": {
-        "telegram": "<your telegram bot API key>",
-        "pixabay": "<your pixabay API key>",
+        "telegram": "<your telegram bot API token>",
+        "pixabay": "<your pixabay API token>",
         "gifme": "rX7kbMzkGu7WJwvG",
         "giphy": "dc6zaTOxFJmzC",
-        "alphacoders": "<your alphacoders API key>"
+        "alphacoders": "<your alphacoders API token>"
     }
 }
