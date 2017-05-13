@@ -17,42 +17,53 @@
  */
 package xyz.karpador.godfishbot.commands;
 
+import java.util.HashMap;
 import org.telegram.telegrambots.api.objects.Message;
+import xyz.karpador.godfishbot.Main;
 
 /**
  *
  * @author Follpvosten
  */
-public class TruthahnCommand extends Command {
+public class StarCommand extends Command {
     
-    private String mediaId = null;
+    private static final String PREFIX = "star";
+    private static final int STAR_COUNT = 58;
+    
+    private final HashMap<String, String> mediaIds;
+    
+    public StarCommand() {
+	mediaIds = new HashMap<>();
+    }
 
     @Override
     public String getName() {
-	return "truthahn";
+	return "star";
     }
 
     @Override
     public String getUsage() {
-	return "/truthahn";
+	return "/star";
     }
 
     @Override
     public String getDescription() {
-	return "Get a Truthahn voice message";
+	return "Get a beautiful star";
     }
 
     @Override
     public CommandResult getReply(String params, Message message, String myName) {
 	CommandResult result = new CommandResult();
-	result.audioUrl = "/audio/truthahn.ogg";
-        result.mediaId = mediaId;
+	int starNumber = Main.Random.nextInt(STAR_COUNT);
+	result.imageUrl = "/images/" + PREFIX + starNumber + ".jpg";
+	if(mediaIds.containsKey(result.imageUrl))
+	    result.mediaId = mediaIds.get(result.imageUrl);
 	return result;
     }
 
     @Override
-    public void processSendResult(String audioUrl, String mediaId) {
-        this.mediaId = mediaId;
+    public void processSendResult(String mediaUrl, String mediaId) {
+	mediaIds.put(mediaUrl, mediaId);
     }
     
 }

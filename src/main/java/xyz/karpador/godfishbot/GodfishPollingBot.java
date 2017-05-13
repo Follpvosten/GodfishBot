@@ -37,12 +37,13 @@ import xyz.karpador.godfishbot.commands.*;
 public class GodfishPollingBot extends TelegramLongPollingBot {
     
     public static final Command[] COMMANDS =
-    { new HelloCommand(), new HelpCommand(), new KissCommand(),
+    { new HelpCommand(), new HelloCommand(), new KissCommand(),
       new ExplodeCommand(), new HugCommand(), new FlauschCommand(),
       new TrumpCommand(), new RikkaCommand(), new GifCommand(),
       new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
-      new TruthahnCommand(), new HeuldochCommand(), new BoaheyCommand(),
-      new MLPCommand() };
+      new VoiceCommand("truthahn", "truthahn.ogg"), new MLPCommand(),
+      new VoiceCommand("heuldoch", "heuldoch.ogg"), new StarCommand(),
+      new VoiceCommand("boahey", "boahey.ogg") };
     
     private final HashMap<String, Command> commands;
     private String myName = null;

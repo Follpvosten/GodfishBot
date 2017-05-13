@@ -23,33 +23,39 @@ import org.telegram.telegrambots.api.objects.Message;
  *
  * @author Follpvosten
  */
-public class BoaheyCommand extends Command {
+public class VoiceCommand extends Command {
     
+    private final String name, fileName;
     private String mediaId = null;
+    
+    public VoiceCommand(String cmdName, String fileName) {
+	name = cmdName;
+	this.fileName = fileName;
+    }
 
     @Override
     public String getName() {
-	return "boahey";
+	return name;
     }
 
     @Override
     public String getUsage() {
-	return "/boahey";
+	return "/" + name;
     }
 
     @Override
     public String getDescription() {
-	return "Get a \"boah ey\" voice message";
+	return "Get a nice voice message";
     }
 
     @Override
     public CommandResult getReply(String params, Message message, String myName) {
 	CommandResult result = new CommandResult();
-	result.audioUrl = "/audio/boahey.ogg";
+	result.audioUrl = "/audio/" + fileName;
         result.mediaId = mediaId;
 	return result;
     }
-    
+
     @Override
     public void processSendResult(String audioUrl, String mediaId) {
         this.mediaId = mediaId;
