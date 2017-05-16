@@ -18,74 +18,86 @@
 package xyz.karpador.godfishbot.commands;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import static java.net.HttpURLConnection.HTTP_OK;
 import java.net.URL;
 import java.net.URLEncoder;
-import org.json.JSONException;
+import javax.net.ssl.HttpsURLConnection;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
 import xyz.karpador.godfishbot.BotConfig;
+import xyz.karpador.godfishbot.Main;
 
 /**
  *
  * @author Follpvosten
  */
-public class GiphyCommand extends Command {
+public class PbCommand extends Command {
 
     @Override
     public String getName() {
-	return "gyp";
+	return "pb";
     }
 
     @Override
     public String getUsage() {
-	return "/gyp [filter]";
+	return "/pb [search query]";
     }
 
     @Override
     public String getDescription() {
-	return "Get a random GIF from Giphy (optionally filtered)";
+	return "Get an image from Pixabay (optionally filtered by a search query)";
     }
 
     @Override
     public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult("Powered by Giphy");
+	CommandResult result = new CommandResult();
 	try {
-	    String urlString =
-		    "http://api.giphy.com/v1/gifs/random?api_key="
-		    + BotConfig.getInstance().getGiphyToken();
+	    String urlString = "https://pixabay.com/api/"
+			     + "?key=" + BotConfig.getInstance().getPixabayToken()
+			     + "&pretty=false";
 	    if(params != null)
-		urlString += "&tag=" + URLEncoder.encode(params, "UTF-8");
+		urlString += "&q=" + URLEncoder.encode(params, "UTF-8");
 	    URL url = new URL(urlString);
-	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
 	    if(con.getResponseCode() == HTTP_OK) {
 		BufferedReader br = 
-			    new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
+		    new BufferedReader(
+			new InputStreamReader(con.getInputStream())
+		    );
 		String httpResult = "";
 		String line;
 		while((line = br.readLine()) != null)
-			httpResult += line;
+		    httpResult += line;
 		JSONObject resultJson = new JSONObject(httpResult);
-		if(resultJson.getJSONObject("meta").getInt("status") == HTTP_OK) {
-		    result.imageUrl = 
-			    "http://i.giphy.com/" +
-			    resultJson.getJSONObject("data").getString("id") +
-			    ".gif";
-		} else {
-		    return null;
+		int totalHits = resultJson.getInt("totalHits");
+		int pageNumber = 1;
+		if(totalHits > 20) // Generate a valid page number.
+		    pageNumber = Main.Random.nextInt((int)Math.ceil(totalHits / 20)) + 1;
+		if(pageNumber > 1) {
+		    urlString += "&page=" + pageNumber;
+		    url = new URL(urlString);
+		    con = (HttpsURLConnection)url.openConnection();
+		    if(con.getResponseCode() == HTTP_OK) {
+			br = new BufferedReader(
+			    new InputStreamReader(con.getInputStream())
+			);
+			httpResult = "";
+			while((line = br.readLine()) != null)
+			    httpResult += line;
+			resultJson = new JSONObject(httpResult);
+		    }
 		}
+		JSONArray hits = resultJson.getJSONArray("hits");
+		int imageIndex = Main.Random.nextInt(hits.length());
+		JSONObject img = hits.getJSONObject(imageIndex);
+		result.imageUrl = img.getString("webformatURL");
 	    }
-	} catch(IOException | JSONException e) {
+	} catch(Exception e) {
 	    e.printStackTrace();
 	    return null;
 	}
-	
-	result.isGIF = true;
 	return result;
     }
     

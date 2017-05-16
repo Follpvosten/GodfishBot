@@ -43,7 +43,7 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
       new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
       new VoiceCommand("truthahn", "truthahn.ogg"), new MLPCommand(),
       new VoiceCommand("heuldoch", "heuldoch.ogg"), new StarCommand(),
-      new VoiceCommand("boahey", "boahey.ogg") };
+      new VoiceCommand("boahey", "boahey.ogg"), new PbCommand() };
     
     private final HashMap<String, Command> commands;
     private String myName = null;
