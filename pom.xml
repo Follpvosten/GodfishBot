@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.karpador</groupId>
     <artifactId>GodfishBot</artifactId>
-    <version>0.3.3-SNAPSHOT</version>
+    <version>0.3.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -45,6 +45,8 @@
                     <archive>
                         <manifest>
                             <mainClass>xyz.karpador.godfishbot.Main</mainClass>
+			    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                     <descriptorRefs>

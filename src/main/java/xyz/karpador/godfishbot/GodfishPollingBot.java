@@ -37,7 +37,7 @@ import xyz.karpador.godfishbot.commands.*;
 public class GodfishPollingBot extends TelegramLongPollingBot {
     
     public static final Command[] COMMANDS =
-    { new HelpCommand(), new HelloCommand(), new KissCommand(),
+    { new HelpCommand(), new AboutCommand(), new HelloCommand(), new KissCommand(),
       new ExplodeCommand(), new HugCommand(), new FlauschCommand(),
       new TrumpCommand(), new RikkaCommand(), new GifCommand(),
       new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
