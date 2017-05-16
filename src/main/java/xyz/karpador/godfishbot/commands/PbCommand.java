@@ -72,6 +72,11 @@ public class PbCommand extends Command {
 		    httpResult += line;
 		JSONObject resultJson = new JSONObject(httpResult);
 		int totalHits = resultJson.getInt("totalHits");
+		if(totalHits < 1) {
+		    result.replyToId = message.getMessageId();
+		    result.text = "No results found.";
+		    return result;
+		}
 		int pageNumber = 1;
 		if(totalHits > 20) // Generate a valid page number.
 		    pageNumber = Main.Random.nextInt((int)Math.ceil(totalHits / 20)) + 1;
