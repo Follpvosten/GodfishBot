@@ -42,6 +42,7 @@ public final class BotConfig {
     private String gifmeToken;
     private String giphyToken;
     private String alphacodersToken;
+    private String mashapeToken;
     
     public void init() {
         File configFile = new File("config.json");
@@ -62,6 +63,7 @@ public final class BotConfig {
             gifmeToken = apiKeys.getString("gifme");
             giphyToken = apiKeys.getString("giphy");
             alphacodersToken = apiKeys.getString("alphacoders");
+	    mashapeToken = apiKeys.getString("mashape");
         } catch(IOException | JSONException e) {
             e.printStackTrace();
             System.exit(1);
@@ -87,6 +89,9 @@ public final class BotConfig {
     public String getAlphacodersToken() {
         return alphacodersToken;
     }
-    
+
+    public String getMashapeToken() {
+	return mashapeToken;
+    }
     
 }

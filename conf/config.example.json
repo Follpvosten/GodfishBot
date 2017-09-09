@@ -4,6 +4,7 @@
         "pixabay": "<your pixabay API token>",
         "gifme": "rX7kbMzkGu7WJwvG",
         "giphy": "dc6zaTOxFJmzC",
-        "alphacoders": "<your alphacoders API token>"
+        "alphacoders": "<your alphacoders API token>",
+        "mashape": "<your Mashape API token>"
     }
 }
