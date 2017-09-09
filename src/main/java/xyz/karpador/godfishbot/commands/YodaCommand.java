@@ -24,8 +24,6 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import java.net.URL;
 import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
 import xyz.karpador.godfishbot.BotConfig;
 
@@ -67,7 +65,7 @@ public class YodaCommand extends Command {
 		String result = br.readLine();
 		return new CommandResult(result);
 	    }
-	} catch(IOException | JSONException e) {
+	} catch(IOException e) {
 	    e.printStackTrace();
 	}
 	return null;
