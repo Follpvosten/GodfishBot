@@ -33,32 +33,35 @@ import xyz.karpador.godfishbot.Main;
  *
  * @author Follpvosten
  */
-public class QuoteCommand extends Command {
+public class TestLoveCommand extends Command {
 
     @Override
     public String getName() {
-	return "quote";
+	return "testlove";
     }
 
     @Override
     public String getUsage() {
-	return "/quote";
+	return "/testlove <name1> <name2>";
     }
 
     @Override
     public String getDescription() {
-	return "Get a random quote by famous people or from movies";
+	return "Test your love by putting in your f***ing names (because that says so much).\n"
+	     + "Don't use spaces in the names. You're gonna die otherwise.";
     }
 
     @Override
     public CommandResult getReply(String params, Message message, String myName) {
+	if(params == null) return new CommandResult("Please submit two names.");
+	String[] names = params.split(" ");
+	if(names.length < 2) return new CommandResult("Please submit two names.");
 	try {
-	    String cat = Main.Random.nextInt(2) == 0 ? "famous" : "movies";
-	    URL url = new URL("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=" + cat + "&count=1");
+	    URL url = new URL("https://love-calculator.p.mashape.com/getPercentage"
+			    + "?fname=" + names[0] + "&sname=" + names[1]);
 	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
 	    con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
 	    con.setRequestProperty("Accept", "application/json");
-	    con.setReadTimeout(5000);
 	    if(con.getResponseCode() == HTTP_OK) {
 		BufferedReader br = 
 			new BufferedReader(
@@ -66,8 +69,9 @@ public class QuoteCommand extends Command {
 			);
 		String result = br.readLine();
 		JSONObject resultJson = new JSONObject(result);
-		String cmdResult = "„" + resultJson.getString("quote") + "“ - "
-				 + resultJson.getString("author");
+		String cmdResult = names[0] + " and " + names[1] + " fit "
+				 + resultJson.getString("percentage") + "%.\n"
+				 + resultJson.getString("result");
 		return new CommandResult(cmdResult);
 	    }
 	} catch(IOException | JSONException e) {
