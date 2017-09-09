@@ -55,13 +55,15 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 	    commands.put(cmd.getName(), cmd);
         if(BotConfig.getInstance().getAlphacodersToken().startsWith("<")) {
             System.err.println("Warning: No AlphaCoders Token specified in config file!");
-            System.err.println("The /rikka command will be disabled.");
+            System.err.println("The /rikka and /wa commands will be disabled.");
             commands.get("rikka").disable();
+	    commands.get("wa").disable();
         }
         if(BotConfig.getInstance().getPixabayToken().startsWith("<")) {
             System.err.println("Warning: No Pixabay Token specified in config file!");
-            System.err.println("The /flausch command will be disabled.");
+            System.err.println("The /flausch and /pb commands will be disabled.");
             commands.get("flausch").disable();
+	    commands.get("pb").disable();
         }
     }
 
