@@ -68,14 +68,14 @@ public class RankLoveCommand extends Command {
 		    return;
 	    }
 	    testResults.add(
-		    new TestResult(
-			    name1,
-			    name2,
-			    getLovePer(
-				    name1.toUpperCase(), 
-				    name2.toUpperCase()
-			    )
+		new TestResult(
+		    name1,
+		    name2,
+		    getLovePer(
+			name1.toUpperCase(), 
+			name2.toUpperCase()
 		    )
+		)
 	    );
 	}
 	
@@ -149,7 +149,12 @@ public class RankLoveCommand extends Command {
     }
     
     private int getLovePer(String name1, String name2) {
-	List<String> count = getCount(name1, name2);
+	List<String> count;
+	if(name1.compareTo(name2) < 0)
+	    count = getCount(name1, name2);
+	else
+	    count = getCount(name2, name1);
+	
 	if (count.size() == 1) {
 	    String result = count.get(0);
 	    return Integer.parseInt(result);
