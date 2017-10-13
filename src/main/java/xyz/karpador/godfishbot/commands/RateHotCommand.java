@@ -91,8 +91,8 @@ public class RateHotCommand extends Command {
 	name = name + new StringBuilder(name).reverse().toString();
 	// Log the current working value to console, just for fun
 	System.out.println(name);
-	// Initialize a randomizer with the first character as seed
-	Random random = new Random(name.charAt(0));
+	// Initialize a randomizer
+	Random random = new Random();
 	// The randomizer helps deciding the numbers added to the result
 	for(int i = 0; i < name.length(); i++) {
 	    // Get a nice number...
