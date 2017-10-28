@@ -77,6 +77,11 @@ public class MLPCommand extends Command {
 		result.imageUrl = "http://mylittlefacewhen.com" + jsonObj.getString("image");
 		if(result.imageUrl.toLowerCase().endsWith(".gif"))
 		    result.isGIF = true;
+	    } else {
+		result.text =
+			"mylittlefacewhen.com returned error code " +
+			con.getResponseCode() + ": " +
+			con.getResponseMessage();
 	    }
 	} catch(IOException | JSONException e) {
 	    e.printStackTrace();
