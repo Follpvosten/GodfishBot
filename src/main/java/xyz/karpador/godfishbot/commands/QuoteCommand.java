@@ -35,45 +35,40 @@ import xyz.karpador.godfishbot.Main;
  */
 public class QuoteCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "quote";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/quote";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a random quote by famous people or from movies";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	try {
-	    String cat = Main.Random.nextInt(2) == 0 ? "famous" : "movies";
-	    URL url = new URL("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=" + cat + "&count=1");
-	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-	    con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
-	    con.setRequestProperty("Accept", "application/json");
-	    con.setReadTimeout(5000);
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-		String result = br.readLine();
-		JSONObject resultJson = new JSONObject(result);
-		String cmdResult = "„" + resultJson.getString("quote") + "“ - "
-				 + resultJson.getString("author");
-		return new CommandResult(cmdResult);
-	    }
-	} catch(IOException | JSONException e) {
-	    e.printStackTrace();
+	@Override
+	public String getName() {
+		return "quote";
 	}
-	return null;
-    }
-    
+
+	@Override
+	public String getDescription() {
+		return "Get a random quote by famous people or from movies";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		try {
+			String cat = Main.Random.nextInt(2) == 0 ? "famous" : "movies";
+			URL url = new URL("https://andruxnet-random-famous-quotes.p.mashape.com/?cat=" + cat + "&count=1");
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+			con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
+			con.setRequestProperty("Accept", "application/json");
+			con.setReadTimeout(5000);
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String result = br.readLine();
+				JSONObject resultJson = new JSONObject(result);
+				String cmdResult = "„" + resultJson.getString("quote") + "“ - "
+						+ resultJson.getString("author");
+				return new CommandResult(cmdResult);
+			}
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

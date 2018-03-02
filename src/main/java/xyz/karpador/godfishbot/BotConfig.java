@@ -30,26 +30,26 @@ import org.json.JSONObject;
  */
 public final class BotConfig {
     private static BotConfig instance;
-    
+
     public static BotConfig getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new BotConfig();
         return instance;
     }
-    
+
     private String telegramBotToken;
     private String pixabayToken;
     private String gifmeToken;
     private String giphyToken;
     private String alphacodersToken;
     private String mashapeToken;
-    
+
     public void init() {
         File configFile = new File("config.json");
-        if(!configFile.exists()) {
+        if (!configFile.exists()) {
             try {
                 Files.copy(new File("config.example.json"), configFile);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(1);
             }
@@ -63,8 +63,8 @@ public final class BotConfig {
             gifmeToken = apiKeys.getString("gifme");
             giphyToken = apiKeys.getString("giphy");
             alphacodersToken = apiKeys.getString("alphacoders");
-	    mashapeToken = apiKeys.getString("mashape");
-        } catch(IOException | JSONException e) {
+            mashapeToken = apiKeys.getString("mashape");
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -91,7 +91,7 @@ public final class BotConfig {
     }
 
     public String getMashapeToken() {
-	return mashapeToken;
+        return mashapeToken;
     }
-    
+
 }

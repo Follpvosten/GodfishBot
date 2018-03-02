@@ -36,58 +36,58 @@ import xyz.karpador.godfishbot.Main;
  */
 public class MLPCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "mlp";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/mlp <tags>";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a face from MyLittleFaceWhen.\n<tags>: Search tags separated by commas";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(params == null)
-	    return new CommandResult(getUsage() + "\n" + getDescription());
-	CommandResult result = new CommandResult();
-	try {
-	    if(!params.endsWith(","))
-		params += ",";
-	    String urlString =
-		    "http://mylittlefacewhen.com/api/v3/face/"
-		    + "?tags__all=" + URLEncoder.encode(params, "UTF-8")
-		    + "&limit=100&accepted=true&format=json";
-	    URL url = new URL(urlString);
-	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			    new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-		String httpResult = br.readLine();
-		JSONArray jsonResult = new JSONObject(httpResult).getJSONArray("objects");
-		int randIndex = Main.Random.nextInt(jsonResult.length());
-		JSONObject jsonObj = jsonResult.getJSONObject(randIndex);
-		result.imageUrl = "http://mylittlefacewhen.com" + jsonObj.getString("image");
-		if(result.imageUrl.toLowerCase().endsWith(".gif"))
-		    result.isGIF = true;
-	    } else {
-		result.text =
-			"mylittlefacewhen.com returned error code " +
-			con.getResponseCode() + ": " +
-			con.getResponseMessage();
-	    }
-	} catch(IOException | JSONException e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public String getName() {
+		return "mlp";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/mlp <tags>";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a face from MyLittleFaceWhen.\n<tags>: Search tags separated by commas";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (params == null)
+			return new CommandResult(getUsage() + "\n" + getDescription());
+		CommandResult result = new CommandResult();
+		try {
+			if (!params.endsWith(","))
+				params += ",";
+			String urlString =
+					"http://mylittlefacewhen.com/api/v3/face/"
+							+ "?tags__all=" + URLEncoder.encode(params, "UTF-8")
+							+ "&limit=100&accepted=true&format=json";
+			URL url = new URL(urlString);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String httpResult = br.readLine();
+				JSONArray jsonResult = new JSONObject(httpResult).getJSONArray("objects");
+				int randIndex = Main.Random.nextInt(jsonResult.length());
+				JSONObject jsonObj = jsonResult.getJSONObject(randIndex);
+				result.imageUrl = "http://mylittlefacewhen.com" + jsonObj.getString("image");
+				if (result.imageUrl.toLowerCase().endsWith(".gif"))
+					result.isGIF = true;
+			} else {
+				result.text =
+						"mylittlefacewhen.com returned error code " +
+								con.getResponseCode() + ": " +
+								con.getResponseMessage();
+			}
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+
 }

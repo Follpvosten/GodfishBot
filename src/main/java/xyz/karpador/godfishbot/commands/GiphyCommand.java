@@ -35,58 +35,58 @@ import xyz.karpador.godfishbot.BotConfig;
  */
 public class GiphyCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "gyp";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/gyp [filter]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a random GIF from Giphy (optionally filtered)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult("Powered by Giphy");
-	try {
-	    String urlString =
-		    "http://api.giphy.com/v1/gifs/random?api_key="
-		    + BotConfig.getInstance().getGiphyToken();
-	    if(params != null)
-		urlString += "&tag=" + URLEncoder.encode(params, "UTF-8");
-	    URL url = new URL(urlString);
-	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			    new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-		String httpResult = "";
-		String line;
-		while((line = br.readLine()) != null)
-			httpResult += line;
-		JSONObject resultJson = new JSONObject(httpResult);
-		if(resultJson.getJSONObject("meta").getInt("status") == HTTP_OK) {
-		    result.imageUrl = 
-			    "http://i.giphy.com/" +
-			    resultJson.getJSONObject("data").getString("id") +
-			    ".gif";
-		} else {
-		    return null;
-		}
-	    }
-	} catch(IOException | JSONException e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public String getName() {
+		return "gyp";
 	}
-	
-	result.isGIF = true;
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/gyp [filter]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a random GIF from Giphy (optionally filtered)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult("Powered by Giphy");
+		try {
+			String urlString =
+					"http://api.giphy.com/v1/gifs/random?api_key="
+							+ BotConfig.getInstance().getGiphyToken();
+			if (params != null)
+				urlString += "&tag=" + URLEncoder.encode(params, "UTF-8");
+			URL url = new URL(urlString);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String httpResult = "";
+				String line;
+				while ((line = br.readLine()) != null)
+					httpResult += line;
+				JSONObject resultJson = new JSONObject(httpResult);
+				if (resultJson.getJSONObject("meta").getInt("status") == HTTP_OK) {
+					result.imageUrl =
+							"http://i.giphy.com/" +
+									resultJson.getJSONObject("data").getString("id") +
+									".gif";
+				} else {
+					return null;
+				}
+			}
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		result.isGIF = true;
+		return result;
+	}
+
 }

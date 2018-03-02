@@ -35,103 +35,103 @@ import xyz.karpador.godfishbot.Main;
  */
 public class WaCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "wa";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/wa [search query]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a wallpaper from Wallpaper Abyss (optionally filtered).";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult();
-	if(params != null) {
-	    // Get a command by search term
-	    try {
-		URL url = new URL(
-			"https://wall.alphacoders.com/api2.0/get.php"
-			+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
-			+ "&method=search&term=" + URLEncoder.encode(params, "UTF-8")
-		);
-		HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-		if(con.getResponseCode() == HTTP_OK) {
-		    BufferedReader br = 
-			new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-		    String httpResult = br.readLine();
-		    JSONObject resultJson = new JSONObject(httpResult);
-		    int totalHits = resultJson.getInt("total_match");
-		    if(totalHits < 1) {
-			result.replyToId = message.getMessageId();
-			result.text = "No results found.";
-			return result;
-		    }
-		    int pageNumber = 1;
-		    if(totalHits > 30)
-			pageNumber = Main.Random.nextInt((int)Math.ceil(totalHits / 30)) + 1;
-		    if(pageNumber > 1) {
-			url = new URL(url.toString() + "&page=" + pageNumber);
-			con = (HttpsURLConnection)url.openConnection();
-			if(con.getResponseCode() == HTTP_OK) {
-			    br = new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-			    httpResult = br.readLine();
-			    resultJson = new JSONObject(httpResult);
-			}
-		    }
-		    if(resultJson.getBoolean("success")) {
-			JSONArray imgs = resultJson.getJSONArray("wallpapers");
-			JSONObject img = imgs.getJSONObject(Main.Random.nextInt(imgs.length()));
-			result.imageUrl = img.getString("url_thumb");
-			result.text = img.getString("url_page");
-		    } else {
-			result.text = resultJson.getString("error");
-		    }
-		}
-	    } catch(Exception e) {
-		e.printStackTrace();
-		return null;
-	    }
-	} else {
-	    // Get a random wallpaper
-	    try {
-		URL url = new URL(
-			"https://wall.alphacoders.com/api2.0/get.php"
-			+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
-			+ "&method=random&count=1"
-		);
-		HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-		if(con.getResponseCode() == HTTP_OK) {
-		    BufferedReader br = 
-			new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-		    String httpResult = br.readLine();
-		    JSONObject resultJson = new JSONObject(httpResult);
-		    if(resultJson.getBoolean("success")) {
-			JSONObject img = resultJson.getJSONArray("wallpapers").getJSONObject(0);
-			result.imageUrl = img.getString("url_thumb");
-			result.text = img.getString("url_page");
-		    } else {
-			result.text = resultJson.getString("error");
-		    }
-		}
-	    } catch(Exception e) {
-		e.printStackTrace();
-		return null;
-	    }
+	@Override
+	public String getName() {
+		return "wa";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/wa [search query]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a wallpaper from Wallpaper Abyss (optionally filtered).";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult();
+		if (params != null) {
+			// Get a wallpaper by search term
+			try {
+				URL url = new URL(
+						"https://wall.alphacoders.com/api2.0/get.php"
+								+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
+								+ "&method=search&term=" + URLEncoder.encode(params, "UTF-8")
+				);
+				HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+				if (con.getResponseCode() == HTTP_OK) {
+					BufferedReader br =
+							new BufferedReader(
+									new InputStreamReader(con.getInputStream())
+							);
+					String httpResult = br.readLine();
+					JSONObject resultJson = new JSONObject(httpResult);
+					int totalHits = resultJson.getInt("total_match");
+					if (totalHits < 1) {
+						result.replyToId = message.getMessageId();
+						result.text = "No results found.";
+						return result;
+					}
+					int pageNumber = 1;
+					if (totalHits > 30)
+						pageNumber = Main.Random.nextInt((int) Math.ceil(totalHits / 30)) + 1;
+					if (pageNumber > 1) {
+						url = new URL(url.toString() + "&page=" + pageNumber);
+						con = (HttpsURLConnection) url.openConnection();
+						if (con.getResponseCode() == HTTP_OK) {
+							br = new BufferedReader(
+									new InputStreamReader(con.getInputStream())
+							);
+							httpResult = br.readLine();
+							resultJson = new JSONObject(httpResult);
+						}
+					}
+					if (resultJson.getBoolean("success")) {
+						JSONArray imgs = resultJson.getJSONArray("wallpapers");
+						JSONObject img = imgs.getJSONObject(Main.Random.nextInt(imgs.length()));
+						result.imageUrl = img.getString("url_thumb");
+						result.text = img.getString("url_page");
+					} else {
+						result.text = resultJson.getString("error");
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		} else {
+			// Get a random wallpaper
+			try {
+				URL url = new URL(
+						"https://wall.alphacoders.com/api2.0/get.php"
+								+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
+								+ "&method=random&count=1"
+				);
+				HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+				if (con.getResponseCode() == HTTP_OK) {
+					BufferedReader br =
+							new BufferedReader(
+									new InputStreamReader(con.getInputStream())
+							);
+					String httpResult = br.readLine();
+					JSONObject resultJson = new JSONObject(httpResult);
+					if (resultJson.getBoolean("success")) {
+						JSONObject img = resultJson.getJSONArray("wallpapers").getJSONObject(0);
+						result.imageUrl = img.getString("url_thumb");
+						result.text = img.getString("url_page");
+					} else {
+						result.text = resultJson.getString("error");
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return result;
+	}
+
 }

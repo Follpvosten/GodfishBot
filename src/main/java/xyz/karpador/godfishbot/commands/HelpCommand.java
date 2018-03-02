@@ -25,41 +25,41 @@ import xyz.karpador.godfishbot.GodfishPollingBot;
  * @author Follpvosten
  */
 public class HelpCommand extends Command {
-    
-    private static final String USAGE = "Available commands:\n%sArguments: <required> [optional]";
 
-    @Override
-    public String getName() {
-	return "help";
-    }
+	private static final String USAGE = "Available commands:\n%sArguments: <required> [optional]";
 
-    @Override
-    public String getUsage() {
-	return "/help [command]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a list of commands (or more info about one command)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(params == null) {
-	    String commands = "";
-	    for(Command cmd : GodfishPollingBot.COMMANDS) {
-		commands += cmd.getUsage();
-                if(cmd.isDisabled()) commands += " (DISABLED)";
-                commands += "\n";
-	    }
-	    return new CommandResult(String.format(USAGE, commands));
-	} else {
-	    for(Command cmd : GodfishPollingBot.COMMANDS) {
-		if(cmd.getName().equals(params))
-		    return new CommandResult(cmd.getUsage() + "\n" + cmd.getDescription());
-	    }
-	    return null;
+	@Override
+	public String getName() {
+		return "help";
 	}
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/help [command]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a list of commands (or more info about one command)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (params == null) {
+			String commands = "";
+			for (Command cmd : GodfishPollingBot.COMMANDS) {
+				commands += cmd.getUsage();
+				if (cmd.isDisabled()) commands += " (DISABLED)";
+				commands += "\n";
+			}
+			return new CommandResult(String.format(USAGE, commands));
+		} else {
+			for (Command cmd : GodfishPollingBot.COMMANDS) {
+				if (cmd.getName().equals(params))
+					return new CommandResult(cmd.getUsage() + "\n" + cmd.getDescription());
+			}
+			return null;
+		}
+	}
+
 }

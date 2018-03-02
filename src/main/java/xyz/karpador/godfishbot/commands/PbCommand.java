@@ -35,75 +35,75 @@ import xyz.karpador.godfishbot.Main;
  */
 public class PbCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "pb";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/pb [search query]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get an image from Pixabay (optionally filtered by a search query)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult();
-	try {
-	    String urlString = "https://pixabay.com/api/"
-			     + "?key=" + BotConfig.getInstance().getPixabayToken()
-			     + "&pretty=false";
-	    if(params != null)
-		urlString += "&q=" + URLEncoder.encode(params, "UTF-8");
-	    URL url = new URL(urlString);
-	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-		    new BufferedReader(
-			new InputStreamReader(con.getInputStream())
-		    );
-		String httpResult = "";
-		String line;
-		while((line = br.readLine()) != null)
-		    httpResult += line;
-		JSONObject resultJson = new JSONObject(httpResult);
-		int totalHits = resultJson.getInt("totalHits");
-		if(totalHits < 1) {
-		    result.replyToId = message.getMessageId();
-		    result.text = "No results found.";
-		    return result;
-		}
-		int pageNumber = 1;
-		if(totalHits > 20) // Generate a valid page number.
-		    pageNumber = Main.Random.nextInt((int)Math.ceil(totalHits / 20)) + 1;
-		if(pageNumber > 1) {
-		    urlString += "&page=" + pageNumber;
-		    url = new URL(urlString);
-		    con = (HttpsURLConnection)url.openConnection();
-		    if(con.getResponseCode() == HTTP_OK) {
-			br = new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-			httpResult = "";
-			while((line = br.readLine()) != null)
-			    httpResult += line;
-			resultJson = new JSONObject(httpResult);
-		    }
-		}
-		JSONArray hits = resultJson.getJSONArray("hits");
-		int imageIndex = Main.Random.nextInt(hits.length());
-		JSONObject img = hits.getJSONObject(imageIndex);
-		result.imageUrl = img.getString("webformatURL");
-	    }
-	} catch(Exception e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public String getName() {
+		return "pb";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/pb [search query]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get an image from Pixabay (optionally filtered by a search query)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult();
+		try {
+			String urlString = "https://pixabay.com/api/"
+					+ "?key=" + BotConfig.getInstance().getPixabayToken()
+					+ "&pretty=false";
+			if (params != null)
+				urlString += "&q=" + URLEncoder.encode(params, "UTF-8");
+			URL url = new URL(urlString);
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String httpResult = "";
+				String line;
+				while ((line = br.readLine()) != null)
+					httpResult += line;
+				JSONObject resultJson = new JSONObject(httpResult);
+				int totalHits = resultJson.getInt("totalHits");
+				if (totalHits < 1) {
+					result.replyToId = message.getMessageId();
+					result.text = "No results found.";
+					return result;
+				}
+				int pageNumber = 1;
+				if (totalHits > 20) // Generate a valid page number.
+					pageNumber = Main.Random.nextInt((int) Math.ceil(totalHits / 20)) + 1;
+				if (pageNumber > 1) {
+					urlString += "&page=" + pageNumber;
+					url = new URL(urlString);
+					con = (HttpsURLConnection) url.openConnection();
+					if (con.getResponseCode() == HTTP_OK) {
+						br = new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+						httpResult = "";
+						while ((line = br.readLine()) != null)
+							httpResult += line;
+						resultJson = new JSONObject(httpResult);
+					}
+				}
+				JSONArray hits = resultJson.getJSONArray("hits");
+				int imageIndex = Main.Random.nextInt(hits.length());
+				JSONObject img = hits.getJSONObject(imageIndex);
+				result.imageUrl = img.getString("webformatURL");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+
 }

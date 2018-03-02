@@ -32,40 +32,33 @@ import org.telegram.telegrambots.api.objects.Message;
  * @author Follpvosten
  */
 public class TrumpCommand extends Command {
-
-    @Override
-    public String getName() {
-	return "trump";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/trump";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a random Donald Trump quote";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	try {
-	    URL url = new URL("https://api.whatdoestrumpthink.com/api/v1/quotes/random");
-	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-		String result = br.readLine();
-		JSONObject resultJson = new JSONObject(result);
-		return new CommandResult(resultJson.getString("message"));
-	    }
-	} catch(IOException | JSONException e) {
-	    e.printStackTrace();
+	@Override
+	public String getName() {
+		return "trump";
 	}
-	return null;
-    }
-    
+
+	@Override
+	public String getDescription() {
+		return "Get a random Donald Trump quote";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		try {
+			URL url = new URL("https://api.whatdoestrumpthink.com/api/v1/quotes/random");
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String result = br.readLine();
+				JSONObject resultJson = new JSONObject(result);
+				return new CommandResult(resultJson.getString("message"));
+			}
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

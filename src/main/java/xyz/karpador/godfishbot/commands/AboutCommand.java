@@ -25,34 +25,29 @@ import org.telegram.telegrambots.api.objects.Message;
  */
 public class AboutCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "about";
-    }
+	@Override
+	public String getName() {
+		return "about";
+	}
 
-    @Override
-    public String getUsage() {
-	return "/about";
-    }
+	@Override
+	public String getDescription() {
+		return "Get more information about this bot";
+	}
 
-    @Override
-    public String getDescription() {
-	return "Get more information about this bot";
-    }
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		String result = "GodfishBot Version "
+				+ getClass().getPackage().getImplementationVersion()
+				+ "\n\n";
+		result += "This program is free software and was released under the "
+				+ "terms of the GNU General Public License Version 2.\n";
+		result += "You can obtain the source code at https://github.com/Follpvosten/GodfishBot/ "
+				+ "(tho the version there might not always be the latest because "
+				+ "i don't use git internally and i'm too lazy to always export new "
+				+ "versions to GitHub.)";
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	String result = "GodfishBot Version "
-		       + getClass().getPackage().getImplementationVersion()
-		       + "\n\n";
-	result += "This program is free software and was released under the "
-		+ "terms of the GNU General Public License Version 2.\n";
-	result += "You can obtain the source code at https://github.com/Follpvosten/GodfishBot/ "
-		+ "(tho the version there might not always be the latest because "
-		+ "i don't use git internally and i'm too lazy to always export new "
-		+ "versions to GitHub.)";
-	
-	return new CommandResult(result);
-    }
-    
+		return new CommandResult(result);
+	}
+
 }

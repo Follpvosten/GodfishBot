@@ -28,9 +28,11 @@ public class CommandResult {
     public boolean isGIF = false;
     public int replyToId = -1;
     public String mediaId = null;
-    
-    public CommandResult() {}
+
+    public CommandResult() {
+    }
+
     public CommandResult(String text) {
-	this.text = text;
+        this.text = text;
     }
 }

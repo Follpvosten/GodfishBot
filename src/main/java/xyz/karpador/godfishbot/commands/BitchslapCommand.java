@@ -25,40 +25,40 @@ import org.telegram.telegrambots.api.objects.Message;
  */
 public class BitchslapCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "bitchslap";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/bitchslap [target]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Bitchslap someone (or just get a bitchslap GIF)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult();
-	
-	if(message.getReplyToMessage() != null) {
-	    result.replyToId = message.getReplyToMessage().getMessageId();
-	    result.imageUrl = "/images/bitchslap.gif";
-	    result.isGIF = true;
-	} else {
-	    if(params != null) {
-		result.text =
-			message.getFrom().getFirstName()
-			+ " bitch slapped " + params;
-	    } else {
-		result.imageUrl = "/images/bitchslap.gif";
-		result.isGIF = true;
-	    }
+	@Override
+	public String getName() {
+		return "bitchslap";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/bitchslap [target]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Bitchslap someone (or just get a bitchslap GIF)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult();
+
+		if (message.getReplyToMessage() != null) {
+			result.replyToId = message.getReplyToMessage().getMessageId();
+			result.imageUrl = "/images/bitchslap.gif";
+			result.isGIF = true;
+		} else {
+			if (params != null) {
+				result.text =
+						message.getFrom().getFirstName()
+								+ " bitch slapped " + params;
+			} else {
+				result.imageUrl = "/images/bitchslap.gif";
+				result.isGIF = true;
+			}
+		}
+		return result;
+	}
+
 }

@@ -28,108 +28,107 @@ import org.telegram.telegrambots.api.objects.Message;
  * @author Follpvosten
  */
 public class RateHotCommand extends Command {
-    private final String name;
-    private final int topCount;
-    
-    private final String HOTSTRING = "SEXÄY";
-    
-    /**
-     * 
-     * @param cmdName The name of the command.
-     * @param topCount The maximum length of the top list returned.
-     */
-    public RateHotCommand(String cmdName, int topCount) {
-	name = cmdName;
-	if(topCount != 0)
-	    this.topCount = topCount;
-	else
-	    this.topCount = Integer.MAX_VALUE;
-    }
-
-    @Override
-    public String getName() {
-	return name;
-    }
-
-    @Override
-    public String getUsage() {
-	return "/" + name + " <name(s)>";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Rates the hotness of characters by their name.";
-    }
-    
-    private class Rating implements Comparable<Rating> {
 	private final String name;
-	private final int rating;
-	
-	public Rating(String name, int rating) {
-	    this.name = name;
-	    this.rating = rating;
-	}
-	
-	@Override
-	public String toString() {
-	    return name + ": " + rating;
+	private final int topCount;
+
+	private final String HOTSTRING = "SEXÄY";
+
+	/**
+	 * @param cmdName  The name of the command.
+	 * @param topCount The maximum length of the top list returned.
+	 */
+	public RateHotCommand(String cmdName, int topCount) {
+		name = cmdName;
+		if (topCount != 0)
+			this.topCount = topCount;
+		else
+			this.topCount = Integer.MAX_VALUE;
 	}
 
 	@Override
-	public int compareTo(Rating other) {
-	    return Integer.compare(other.rating, rating);
+	public String getName() {
+		return name;
 	}
-    }
-    
-    private int getNameRating(String name) {
-	int result = 1;
-	name = name.toLowerCase();
-	// Calculate how hot that guy is, lol
-	// First, we times 1.5 the person...
-	name = name + name.substring(name.length() / 2);
-	// Then we double that, but in reverse
-	name = name + new StringBuilder(name).reverse().toString();
-	// Log the current working value to console, just for fun
-	System.out.println(name);
-	// Initialize a randomizer
-	Random random = new Random();
-	// The randomizer helps deciding the numbers added to the result
-	for(int i = 0; i < name.length(); i++) {
-	    // Get a nice number...
-	    long value = name.charAt(i) + HOTSTRING.charAt(random.nextInt(HOTSTRING.length()));
-	    while(value > 0) {
-		// And shift it into the result
-		result++;
-		value--;
-		// Which may not be above 10, so we circle through there
-		if(result > 10) result = 1;
-	    }
-	}
-	return result;
-    }
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(params == null) return new CommandResult("Please submit at least one name.");
-	String[] names = params.split(" ");
-	if(names.length == 1 || topCount == 1) {
-	    // Rate that one guy
-	    return new CommandResult(names[0] + ": " + getNameRating(names[0]));
-	} else {
-	    // Make a list
-	    List<Rating> ratings = new ArrayList<>();
-	    for (String currentName : names) {
-		ratings.add(new Rating(currentName, getNameRating(currentName)));
-	    }
-	    Collections.sort(ratings);
-	    String result = "";
-	    for(int i = 0; i < ratings.size() && i < topCount; i++) {
-		result += (i+1) + ". " + ratings.get(i).toString();
-		if(i != ratings.size() - 1 && i != topCount - 1)
-		    result += "\n";
-	    }
-	    return new CommandResult(result);
+	@Override
+	public String getUsage() {
+		return super.getUsage() + " <name(s)>";
 	}
-    }
-    
+
+	@Override
+	public String getDescription() {
+		return "Rates the hotness of characters by their name.";
+	}
+
+	private class Rating implements Comparable<Rating> {
+		private final String name;
+		private final int rating;
+
+		public Rating(String name, int rating) {
+			this.name = name;
+			this.rating = rating;
+		}
+
+		@Override
+		public String toString() {
+			return name + ": " + rating;
+		}
+
+		@Override
+		public int compareTo(Rating other) {
+			return Integer.compare(other.rating, rating);
+		}
+	}
+
+	private int getNameRating(String name) {
+		int result = 1;
+		name = name.toLowerCase();
+		// Calculate how hot that guy is, lol
+		// First, we times 1.5 the person...
+		name = name + name.substring(name.length() / 2);
+		// Then we double that, but in reverse
+		name = name + new StringBuilder(name).reverse().toString();
+		// Log the current working value to console, just for fun
+		System.out.println(name);
+		// Initialize a randomizer
+		Random random = new Random();
+		// The randomizer helps deciding the numbers added to the result
+		for (int i = 0; i < name.length(); i++) {
+			// Get a nice number...
+			long value = name.charAt(i) + HOTSTRING.charAt(random.nextInt(HOTSTRING.length()));
+			while (value > 0) {
+				// And shift it into the result
+				result++;
+				value--;
+				// Which may not be above 10, so we circle through there
+				if (result > 10) result = 1;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (params == null) return new CommandResult("Please submit at least one name.");
+		String[] names = params.split(" ");
+		if (names.length == 1 || topCount == 1) {
+			// Rate that one guy
+			return new CommandResult(names[0] + ": " + getNameRating(names[0]));
+		} else {
+			// Make a list
+			List<Rating> ratings = new ArrayList<>();
+			for (String currentName : names) {
+				ratings.add(new Rating(currentName, getNameRating(currentName)));
+			}
+			Collections.sort(ratings);
+			String result = "";
+			for (int i = 0; i < ratings.size() && i < topCount; i++) {
+				result += (i + 1) + ". " + ratings.get(i).toString();
+				if (i != ratings.size() - 1 && i != topCount - 1)
+					result += "\n";
+			}
+			return new CommandResult(result);
+		}
+	}
+
 }

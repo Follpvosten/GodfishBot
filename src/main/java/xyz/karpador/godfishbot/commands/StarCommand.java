@@ -26,44 +26,39 @@ import xyz.karpador.godfishbot.Main;
  * @author Follpvosten
  */
 public class StarCommand extends Command {
-    
-    private static final String PREFIX = "star";
-    private static final int STAR_COUNT = 58;
-    
-    private final HashMap<String, String> mediaIds;
-    
-    public StarCommand() {
-	mediaIds = new HashMap<>();
-    }
 
-    @Override
-    public String getName() {
-	return "star";
-    }
+	private static final String PREFIX = "star";
+	private static final int STAR_COUNT = 58;
 
-    @Override
-    public String getUsage() {
-	return "/star";
-    }
+	private final HashMap<String, String> mediaIds;
 
-    @Override
-    public String getDescription() {
-	return "Get a beautiful star";
-    }
+	public StarCommand() {
+		mediaIds = new HashMap<>();
+	}
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult();
-	int starNumber = Main.Random.nextInt(STAR_COUNT);
-	result.imageUrl = "/images/" + PREFIX + starNumber + ".jpg";
-	if(mediaIds.containsKey(result.imageUrl))
-	    result.mediaId = mediaIds.get(result.imageUrl);
-	return result;
-    }
+	@Override
+	public String getName() {
+		return "star";
+	}
 
-    @Override
-    public void processSendResult(String mediaUrl, String mediaId) {
-	mediaIds.put(mediaUrl, mediaId);
-    }
-    
+	@Override
+	public String getDescription() {
+		return "Get a beautiful star";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult();
+		int starNumber = Main.Random.nextInt(STAR_COUNT);
+		result.imageUrl = "/images/" + PREFIX + starNumber + ".jpg";
+		if (mediaIds.containsKey(result.imageUrl))
+			result.mediaId = mediaIds.get(result.imageUrl);
+		return result;
+	}
+
+	@Override
+	public void processSendResult(String mediaUrl, String mediaId) {
+		mediaIds.put(mediaUrl, mediaId);
+	}
+
 }

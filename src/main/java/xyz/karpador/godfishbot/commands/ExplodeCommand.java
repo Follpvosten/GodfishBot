@@ -25,48 +25,48 @@ import xyz.karpador.godfishbot.Main;
  * @author Follpvosten
  */
 public class ExplodeCommand extends Command {
-    
-    private static final String[] EXPLODE_AT_MESSAGES =
-    { "%1$s exploded all over %2$s's face", "%1$s blew up at %2$s", "%1$s kamikaze'd %2$s",
-      "%1$s blew up %2$s's house", "%1$s used Explosion! %2$s fainted!",
-      "%1$s ate a grenade from %2$s" };
-    private static final String[] EXPLODE_MESSAGES =
-    { "%1$s exploded", "%1$s blew up", "%1$s detonated", "%1$s used Explosion!",
-      "%1$s used Self-Destruct!", "%1$s played minesweeper in real-life",
-      "%1$s ate a grenade" };
 
-    @Override
-    public String getName() {
-	return "explode";
-    }
+	private static final String[] EXPLODE_AT_MESSAGES =
+			{"%1$s exploded all over %2$s's face", "%1$s blew up at %2$s", "%1$s kamikaze'd %2$s",
+					"%1$s blew up %2$s's house", "%1$s used Explosion! %2$s fainted!",
+					"%1$s ate a grenade from %2$s"};
+	private static final String[] EXPLODE_MESSAGES =
+			{"%1$s exploded", "%1$s blew up", "%1$s detonated", "%1$s used Explosion!",
+					"%1$s used Self-Destruct!", "%1$s played minesweeper in real-life",
+					"%1$s ate a grenade"};
 
-    @Override
-    public String getUsage() {
-	return "/explode [target]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Explode (at someone, optionally)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = new CommandResult();
-	if(params == null) {
-	    result.text =
-		    String.format(
-			EXPLODE_MESSAGES[Main.Random.nextInt(EXPLODE_MESSAGES.length)],
-			message.getFrom().getFirstName()
-		    );
-	} else {
-	    result.text =
-		    String.format(
-			EXPLODE_AT_MESSAGES[Main.Random.nextInt(EXPLODE_AT_MESSAGES.length)],
-			message.getFrom().getFirstName(), params
-		    );
+	@Override
+	public String getName() {
+		return "explode";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/explode [target]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Explode (at someone, optionally)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result = new CommandResult();
+		if (params == null) {
+			result.text =
+					String.format(
+							EXPLODE_MESSAGES[Main.Random.nextInt(EXPLODE_MESSAGES.length)],
+							message.getFrom().getFirstName()
+					);
+		} else {
+			result.text =
+					String.format(
+							EXPLODE_AT_MESSAGES[Main.Random.nextInt(EXPLODE_AT_MESSAGES.length)],
+							message.getFrom().getFirstName(), params
+					);
+		}
+		return result;
+	}
+
 }

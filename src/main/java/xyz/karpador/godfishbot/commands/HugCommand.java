@@ -25,38 +25,38 @@ import xyz.karpador.godfishbot.Main;
  * @author Follpvosten
  */
 public class HugCommand extends Command {
-    
-    private static final String[] HUG_MESSAGES =
-    { "%1$s hugged %2$s", "%1$s cuddled with %2$s", "%1$s hugged %2$s tightly",
-      "%2$s got crushed by %1$s's Bewear-like hug" };
 
-    @Override
-    public String getName() {
-	return "hug";
-    }
+	private static final String[] HUG_MESSAGES =
+			{"%1$s hugged %2$s", "%1$s cuddled with %2$s", "%1$s hugged %2$s tightly",
+					"%2$s got crushed by %1$s's Bewear-like hug"};
 
-    @Override
-    public String getUsage() {
-	return "/hug [target]";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Hug someone (or get a hug)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result =
-		new CommandResult(
-			HUG_MESSAGES[Main.Random.nextInt(HUG_MESSAGES.length)]
-		);
-	if(params != null) {
-	    result.text = String.format(result.text, message.getFrom().getFirstName(), params);
-	} else {
-	    result.text = String.format(result.text, myName, message.getFrom().getFirstName());
+	@Override
+	public String getName() {
+		return "hug";
 	}
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/hug [target]";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Hug someone (or get a hug)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result =
+				new CommandResult(
+						HUG_MESSAGES[Main.Random.nextInt(HUG_MESSAGES.length)]
+				);
+		if (params != null) {
+			result.text = String.format(result.text, message.getFrom().getFirstName(), params);
+		} else {
+			result.text = String.format(result.text, myName, message.getFrom().getFirstName());
+		}
+		return result;
+	}
+
 }

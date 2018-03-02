@@ -24,25 +24,20 @@ import org.telegram.telegrambots.api.objects.Message;
  * @author Follpvosten
  */
 public class HelloCommand extends Command {
-    
-    @Override
-    public String getName() {
-	return "hello";
-    }
 
-    @Override
-    public String getUsage() {
-	return "/hello";
-    }
+	@Override
+	public String getName() {
+		return "hello";
+	}
 
-    @Override
-    public String getDescription() {
-	return "Get a nice greeting ( ͡° ͜ʖ ͡°)";
-    }
+	@Override
+	public String getDescription() {
+		return "Get a nice greeting ( ͡° ͜ʖ ͡°)";
+	}
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	return new CommandResult("Hello, " + message.getFrom().getFirstName() + " ( ͡° ͜ʖ ͡°)");
-    }
-    
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		return new CommandResult("Hello, " + message.getFrom().getFirstName() + " ( ͡° ͜ʖ ͡°)");
+	}
+
 }

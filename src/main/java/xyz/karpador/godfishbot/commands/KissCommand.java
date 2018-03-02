@@ -25,37 +25,37 @@ import xyz.karpador.godfishbot.Main;
  * @author Follpvosten
  */
 public class KissCommand extends Command {
-    
-    private static final String[] KISS_MESSAGES =
-    { "%1$s kissed %2$s", "%1$s kissed %2$s tenderly", "%1$s kissed %2$s passionately",
-      "%1$s kissed %2$s sexually", "%1$s kissed %2$s like a wild magikarp",
-      "%2$s's mouth got destroyed by %1$s's furious kiss", "%1$s kissed %2$s on the nose",
-      "%1$s kissed %2$s on the forehead", "%1$s kissed %2$s on the neck" };
 
-    @Override
-    public String getName() {
-	return "kiss";
-    }
+	private static final String[] KISS_MESSAGES =
+			{"%1$s kissed %2$s", "%1$s kissed %2$s tenderly", "%1$s kissed %2$s passionately",
+			 "%1$s kissed %2$s sexually", "%1$s kissed %2$s like a wild magikarp",
+			 "%2$s's mouth got destroyed by %1$s's furious kiss", "%1$s kissed %2$s on the nose",
+			 "%1$s kissed %2$s on the forehead", "%1$s kissed %2$s on the neck"};
 
-    @Override
-    public String getUsage() {
-	return "/kiss [target]";
-    }
+	@Override
+	public String getName() {
+		return "kiss";
+	}
 
-    @Override
-    public String getDescription() {
-	return "Kiss someone (or get kissed)";
-    }
+	@Override
+	public String getUsage() {
+		return "/kiss [target]";
+	}
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	CommandResult result = 
-		new CommandResult(KISS_MESSAGES[Main.Random.nextInt(KISS_MESSAGES.length)]);
-	if(params != null)
-	    result.text = String.format(result.text, message.getFrom().getFirstName(), params);
-	else
-	    result.text = String.format(result.text, myName, message.getFrom().getFirstName());
-	return result;
-    }
-    
+	@Override
+	public String getDescription() {
+		return "Kiss someone (or get kissed)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		CommandResult result =
+				new CommandResult(KISS_MESSAGES[Main.Random.nextInt(KISS_MESSAGES.length)]);
+		if (params != null)
+			result.text = String.format(result.text, message.getFrom().getFirstName(), params);
+		else
+			result.text = String.format(result.text, myName, message.getFrom().getFirstName());
+		return result;
+	}
+
 }

@@ -38,141 +38,135 @@ import xyz.karpador.godfishbot.Main;
  * @author Follpvosten
  */
 public class FlauschCommand extends Command {
-    
-    private ArrayList<String[]> imgUrls = null;
-    private Date lastRefreshDate = new Date();
-    
-    private final AsyncFileHelper fileHelper;
-    
-    private static final String[] BLOCKTAGS =
-    { "baby", "child", "chicken", "figure", "keinohrhase", "man", "cat",
-      "gold foil", "girl", "paddle board" };
 
-    public FlauschCommand() {
-	fileHelper = new AsyncFileHelper("flausch.json");
-	if(fileHelper.fileExists()) {
-	    fileHelper.startRead();
-	}
-    }
-    
-    @Override
-    public String getName() {
-	return "flausch";
-    }
+	private ArrayList<String[]> imgUrls = null;
+	private Date lastRefreshDate = new Date();
 
-    @Override
-    public String getUsage() {
-	return "/flausch";
-    }
+	private final AsyncFileHelper fileHelper;
 
-    @Override
-    public String getDescription() {
-	return "Get a fluffy bunny picture";
-    }
-    
-    private boolean stringContainsAny(String str, String[] values) {
-	for (String value : values)
-	    if (str.contains(value)) return true;
-	return false;
-    }
+	private static final String[] BLOCKTAGS =
+			{"baby", "child", "chicken", "figure", "keinohrhase", "man", "cat",
+					"gold foil", "girl", "paddle board"};
 
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(imgUrls == null) {
-	    String fileContent = fileHelper.getReadData();
-	    if(fileContent != null) {
-		try {
-		    JSONObject fileJson = new JSONObject(fileContent);
-		    JSONArray urlsData = fileJson.getJSONArray("urls");
-		    imgUrls = new ArrayList<>();
-		    for(int i = 0; i < urlsData.length(); i++) {
-			JSONArray values = urlsData.getJSONArray(i);
-			imgUrls.add(new String[] {
-			    values.getString(0),
-			    values.optString(1, null)
-			});
-		    }
-		    lastRefreshDate = new Date(fileJson.getLong("refresh_date"));
-		} catch(JSONException e) {
-		    e.printStackTrace();
+	public FlauschCommand() {
+		fileHelper = new AsyncFileHelper("flausch.json");
+		if (fileHelper.fileExists()) {
+			fileHelper.startRead();
 		}
-	    }
 	}
-	if(imgUrls == null
-	|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600 * 1000)) {
-	    imgUrls = new ArrayList<>();
-	    // Populate the list with pixabay URLs
-	    try {
-		for(int j = 1; j < 10; j++) {
-		    URL url = new URL("https://pixabay.com/api/"
-			    + "?key=" + BotConfig.getInstance().getPixabayToken() + "&q=bunny"
-			    + "&image_type=photo&category=animals&pretty=false"
-			    + "&page=" + j);
-		    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-		    if(con.getResponseCode() == HTTP_OK) {
-			BufferedReader br = 
-			    new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-			String result = "";
-			String line;
-			while((line = br.readLine()) != null)
-			    result += line;
-			JSONObject resultJson = new JSONObject(result);
-			JSONArray hits = resultJson.getJSONArray("hits");
-			
-			for(int i = 0; i < hits.length(); i++) {
-			    JSONObject currentImg = hits.getJSONObject(i);
-			    String tags = currentImg.getString("tags");
-			    if(stringContainsAny(tags, BLOCKTAGS)) continue;
-			    imgUrls.add(new String[] {
-				currentImg.getString("webformatURL"),
-				null
-			    });
+
+	@Override
+	public String getName() {
+		return "flausch";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a fluffy bunny picture";
+	}
+
+	private boolean stringContainsAny(String str, String[] values) {
+		for (String value : values)
+			if (str.contains(value)) return true;
+		return false;
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (imgUrls == null) {
+			String fileContent = fileHelper.getReadData();
+			if (fileContent != null) {
+				try {
+					JSONObject fileJson = new JSONObject(fileContent);
+					JSONArray urlsData = fileJson.getJSONArray("urls");
+					imgUrls = new ArrayList<>();
+					for (int i = 0; i < urlsData.length(); i++) {
+						JSONArray values = urlsData.getJSONArray(i);
+						imgUrls.add(new String[]{
+								values.getString(0),
+								values.optString(1, null)
+						});
+					}
+					lastRefreshDate = new Date(fileJson.getLong("refresh_date"));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
-			lastRefreshDate = new Date();
-			writeCurrentState();
-		    }
 		}
-	    } catch(IOException | JSONException e) {
-		e.printStackTrace();
-		return null;
-	    }
-	}
-	CommandResult result = new CommandResult();
-	String[] data = imgUrls.get(Main.Random.nextInt(imgUrls.size()));
-	result.imageUrl = data[0];
-	result.mediaId = data[1];
-	return result;
-    }
-    
-    private void writeCurrentState() {
-	try {
-	    JSONObject jsonObj = new JSONObject();
-	    jsonObj.put("refresh_date", lastRefreshDate.getTime());
-	    JSONArray urls = new JSONArray();
-	    for(String[] values : imgUrls) {
-		JSONArray url = new JSONArray(values);
-		urls.put(url);
-	    }
-	    jsonObj.put("urls", urls);
-	    fileHelper.startWrite(jsonObj.toString());
-	} catch(JSONException e) {
-	    e.printStackTrace();
-	}
-    }
+		if (imgUrls == null
+				|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600 * 1000)) {
+			imgUrls = new ArrayList<>();
+			// Populate the list with pixabay URLs
+			try {
+				for (int j = 1; j < 10; j++) {
+					URL url = new URL("https://pixabay.com/api/"
+							+ "?key=" + BotConfig.getInstance().getPixabayToken() + "&q=bunny"
+							+ "&image_type=photo&category=animals&pretty=false"
+							+ "&page=" + j);
+					HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+					if (con.getResponseCode() == HTTP_OK) {
+						BufferedReader br =
+								new BufferedReader(
+										new InputStreamReader(con.getInputStream())
+								);
+						String result = "";
+						String line;
+						while ((line = br.readLine()) != null)
+							result += line;
+						JSONObject resultJson = new JSONObject(result);
+						JSONArray hits = resultJson.getJSONArray("hits");
 
-    @Override
-    public void processSendResult(String mediaUrl, String mediaId) {
-	for(String[] image : imgUrls) {
-	    if(image[0].equals(mediaUrl)) {
-		if(image[1] == null) {
-		    image[1] = mediaId;
-		    writeCurrentState();
+						for (int i = 0; i < hits.length(); i++) {
+							JSONObject currentImg = hits.getJSONObject(i);
+							String tags = currentImg.getString("tags");
+							if (stringContainsAny(tags, BLOCKTAGS)) continue;
+							imgUrls.add(new String[]{
+									currentImg.getString("webformatURL"),
+									null
+							});
+						}
+						lastRefreshDate = new Date();
+						writeCurrentState();
+					}
+				}
+			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
-		return;
-	    }
+		CommandResult result = new CommandResult();
+		String[] data = imgUrls.get(Main.Random.nextInt(imgUrls.size()));
+		result.imageUrl = data[0];
+		result.mediaId = data[1];
+		return result;
 	}
-    }
-    
+
+	private void writeCurrentState() {
+		try {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("refresh_date", lastRefreshDate.getTime());
+			JSONArray urls = new JSONArray();
+			for (String[] values : imgUrls) {
+				JSONArray url = new JSONArray(values);
+				urls.put(url);
+			}
+			jsonObj.put("urls", urls);
+			fileHelper.startWrite(jsonObj.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void processSendResult(String mediaUrl, String mediaId) {
+		for (String[] image : imgUrls) {
+			if (image[0].equals(mediaUrl)) {
+				if (image[1] == null) {
+					image[1] = mediaId;
+					writeCurrentState();
+				}
+				return;
+			}
+		}
+	}
 }

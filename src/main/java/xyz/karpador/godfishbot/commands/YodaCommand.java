@@ -33,42 +33,42 @@ import xyz.karpador.godfishbot.BotConfig;
  */
 public class YodaCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "yoda";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/yoda <sentence>";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get your sentence transformed into yoda speak.";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(params == null) return new CommandResult("Please provide a sentence.");
-	try {
-	    URL url = new URL("https://yoda.p.mashape.com/yoda?sentence="
-			    + URLEncoder.encode(params, "UTF-8"));
-	    HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
-	    con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
-	    con.setRequestProperty("Accept", "text/plain");
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			new BufferedReader(
-			    new InputStreamReader(con.getInputStream())
-			);
-		String result = br.readLine();
-		return new CommandResult(result);
-	    }
-	} catch(IOException e) {
-	    e.printStackTrace();
+	@Override
+	public String getName() {
+		return "yoda";
 	}
-	return null;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/yoda <sentence>";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get your sentence transformed into yoda speak.";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (params == null) return new CommandResult("Please provide a sentence.");
+		try {
+			URL url = new URL("https://yoda.p.mashape.com/yoda?sentence="
+					+ URLEncoder.encode(params, "UTF-8"));
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+			con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
+			con.setRequestProperty("Accept", "text/plain");
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String result = br.readLine();
+				return new CommandResult(result);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

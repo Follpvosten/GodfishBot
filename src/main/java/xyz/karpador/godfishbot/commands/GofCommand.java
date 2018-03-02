@@ -35,74 +35,74 @@ import xyz.karpador.godfishbot.Main;
  */
 public class GofCommand extends Command {
 
-    @Override
-    public String getName() {
-	return "gof";
-    }
-
-    @Override
-    public String getUsage() {
-	return "/gof <tag>";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Get a GIF from gifbase (by search query)";
-    }
-
-    @Override
-    public CommandResult getReply(String params, Message message, String myName) {
-	if(params == null)
-	    return new CommandResult(getUsage() + "\n" + getDescription());
-	CommandResult result = new CommandResult();
-	try {
-	    String urlString = "http://gifbase.com/tag/" + params + "?format=json";
-	    URL url = new URL(urlString);
-	    HttpURLConnection con = (HttpURLConnection)url.openConnection();
-	    con.setConnectTimeout(4000);
-	    if(con.getResponseCode() == HTTP_OK) {
-		BufferedReader br = 
-			    new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-		String httpResult = "";
-		String line;
-		while((line = br.readLine()) != null)
-		    httpResult += line;
-		JSONObject resultJson = new JSONObject(httpResult);
-		int pageCount = resultJson.optInt("page_count", 1);
-		if(pageCount > 1) {
-		    int page = Main.Random.nextInt(pageCount - 1) + 1;
-		    if(page != resultJson.getInt("page_current")) {
-			urlString += "&p=" + page;
-			url = new URL(urlString);
-			con = (HttpURLConnection)url.openConnection();
-			con.setConnectTimeout(4000);
-			if(con.getResponseCode() == HTTP_OK) {
-			    br = new BufferedReader(
-				new InputStreamReader(con.getInputStream())
-			    );
-			    httpResult = "";
-			    while((line = br.readLine()) != null)
-				httpResult += line;
-			    resultJson = new JSONObject(httpResult);
-			}
-		    }
-		}
-		JSONArray gifs = resultJson.optJSONArray("gifs");
-		if(gifs != null) {
-		    JSONObject gif = gifs.getJSONObject(Main.Random.nextInt(gifs.length()));
-		    result.imageUrl = gif.getString("url");
-		} else
-		    return null;
-	    }
-	} catch(IOException | JSONException e) {
-	    e.printStackTrace();
-	    return null;
+	@Override
+	public String getName() {
+		return "gof";
 	}
-	if(result.imageUrl == null) return null;
-	result.isGIF = true;
-	return result;
-    }
-    
+
+	@Override
+	public String getUsage() {
+		return "/gof <tag>";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Get a GIF from gifbase (by search query)";
+	}
+
+	@Override
+	public CommandResult getReply(String params, Message message, String myName) {
+		if (params == null)
+			return new CommandResult(getUsage() + "\n" + getDescription());
+		CommandResult result = new CommandResult();
+		try {
+			String urlString = "http://gifbase.com/tag/" + params + "?format=json";
+			URL url = new URL(urlString);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setConnectTimeout(4000);
+			if (con.getResponseCode() == HTTP_OK) {
+				BufferedReader br =
+						new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+						);
+				String httpResult = "";
+				String line;
+				while ((line = br.readLine()) != null)
+					httpResult += line;
+				JSONObject resultJson = new JSONObject(httpResult);
+				int pageCount = resultJson.optInt("page_count", 1);
+				if (pageCount > 1) {
+					int page = Main.Random.nextInt(pageCount - 1) + 1;
+					if (page != resultJson.getInt("page_current")) {
+						urlString += "&p=" + page;
+						url = new URL(urlString);
+						con = (HttpURLConnection) url.openConnection();
+						con.setConnectTimeout(4000);
+						if (con.getResponseCode() == HTTP_OK) {
+							br = new BufferedReader(
+									new InputStreamReader(con.getInputStream())
+							);
+							httpResult = "";
+							while ((line = br.readLine()) != null)
+								httpResult += line;
+							resultJson = new JSONObject(httpResult);
+						}
+					}
+				}
+				JSONArray gifs = resultJson.optJSONArray("gifs");
+				if (gifs != null) {
+					JSONObject gif = gifs.getJSONObject(Main.Random.nextInt(gifs.length()));
+					result.imageUrl = gif.getString("url");
+				} else
+					return null;
+			}
+		} catch (IOException | JSONException e) {
+			e.printStackTrace();
+			return null;
+		}
+		if (result.imageUrl == null) return null;
+		result.isGIF = true;
+		return result;
+	}
+
 }
