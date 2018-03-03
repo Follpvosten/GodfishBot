@@ -56,13 +56,13 @@ public class QuoteCommand extends Command {
 			con.setReadTimeout(5000);
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String result = br.readLine();
 				JSONObject resultJson = new JSONObject(result);
 				String cmdResult = "„" + resultJson.getString("quote") + "“ - "
-						+ resultJson.getString("author");
+					+ resultJson.getString("author");
 				return new CommandResult(cmdResult);
 			}
 		} catch (IOException | JSONException e) {

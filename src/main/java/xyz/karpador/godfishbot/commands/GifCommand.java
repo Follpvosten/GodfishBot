@@ -55,17 +55,17 @@ public class GifCommand extends Command {
 		CommandResult result = new CommandResult();
 		try {
 			String urlString =
-					"http://api.gifme.io/v1/gifs/random?key="
-							+ BotConfig.getInstance().getGifmeToken();
+				"http://api.gifme.io/v1/gifs/random?key="
+					+ BotConfig.getInstance().getGifmeToken();
 			if (params != null)
 				urlString += "&term=" + URLEncoder.encode(params, "UTF-8");
 			URL url = new URL(urlString);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String httpResult = br.readLine();
 				JSONObject resultJson = new JSONObject(httpResult);
 				if (resultJson.getInt("status") == HTTP_OK) {

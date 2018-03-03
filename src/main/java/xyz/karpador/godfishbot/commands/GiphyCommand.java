@@ -55,17 +55,17 @@ public class GiphyCommand extends Command {
 		CommandResult result = new CommandResult("Powered by Giphy");
 		try {
 			String urlString =
-					"http://api.giphy.com/v1/gifs/random?api_key="
-							+ BotConfig.getInstance().getGiphyToken();
+				"http://api.giphy.com/v1/gifs/random?api_key="
+					+ BotConfig.getInstance().getGiphyToken();
 			if (params != null)
 				urlString += "&tag=" + URLEncoder.encode(params, "UTF-8");
 			URL url = new URL(urlString);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String httpResult = "";
 				String line;
 				while ((line = br.readLine()) != null)
@@ -73,9 +73,9 @@ public class GiphyCommand extends Command {
 				JSONObject resultJson = new JSONObject(httpResult);
 				if (resultJson.getJSONObject("meta").getInt("status") == HTTP_OK) {
 					result.imageUrl =
-							"http://i.giphy.com/" +
-									resultJson.getJSONObject("data").getString("id") +
-									".gif";
+						"http://i.giphy.com/" +
+							resultJson.getJSONObject("data").getString("id") +
+							".gif";
 				} else {
 					return null;
 				}

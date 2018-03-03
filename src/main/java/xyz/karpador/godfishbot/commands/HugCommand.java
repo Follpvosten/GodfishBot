@@ -26,9 +26,10 @@ import xyz.karpador.godfishbot.Main;
  */
 public class HugCommand extends Command {
 
-	private static final String[] HUG_MESSAGES =
-			{"%1$s hugged %2$s", "%1$s cuddled with %2$s", "%1$s hugged %2$s tightly",
-					"%2$s got crushed by %1$s's Bewear-like hug"};
+	private static final String[] HUG_MESSAGES = {
+		"%1$s hugged %2$s", "%1$s cuddled with %2$s", "%1$s hugged %2$s tightly",
+		"%2$s got crushed by %1$s's Bewear-like hug"
+	};
 
 	@Override
 	public String getName() {

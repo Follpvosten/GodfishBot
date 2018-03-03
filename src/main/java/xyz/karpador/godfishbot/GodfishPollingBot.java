@@ -36,18 +36,20 @@ import xyz.karpador.godfishbot.commands.*;
  */
 public class GodfishPollingBot extends TelegramLongPollingBot {
 
-	public static final Command[] COMMANDS =
-			{new HelpCommand(), new AboutCommand(), new HelloCommand(), new KissCommand(),
-					new ExplodeCommand(), new HugCommand(), new FlauschCommand(),
-					new TrumpCommand(), new RikkaCommand(), new GifCommand(),
-					new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
-					new VoiceCommand("truthahn", "truthahn.ogg"), new MLPCommand(),
-					new VoiceCommand("heuldoch", "heuldoch.ogg"), new StarCommand(),
-					new VoiceCommand("boahey", "boahey.ogg"), new PbCommand(),
-					new WaCommand(), new YodaCommand(), new QuoteCommand(),
-					new TestLoveCommand(), new RankLoveCommand(),
-					new RateHotCommand("ratehot", 1), new RateHotCommand("rankhot", 5),
-					new RateHotCommand("rankhotfull", 0)};
+	public static final Command[] COMMANDS = {
+		new HelpCommand(), new AboutCommand(), new HelloCommand(), new KissCommand(),
+		new ExplodeCommand(), new HugCommand(), new FlauschCommand(),
+		new TrumpCommand(), new RikkaCommand(), new GifCommand(),
+		new GofCommand(), new GiphyCommand(), new BitchslapCommand(),
+		new VoiceCommand("truthahn", "truthahn.ogg"), new MLPCommand(),
+		new VoiceCommand("heuldoch", "heuldoch.ogg"), new StarCommand(),
+		new VoiceCommand("boahey", "boahey.ogg"), new PbCommand(),
+		new WaCommand(), new YodaCommand(), new QuoteCommand(),
+		new TestLoveCommand(), new RankLoveCommand(),
+		new RateHotCommand("ratehot", 1),
+		new RateHotCommand("rankhot", 5),
+		new RateHotCommand("rankhotfull", 0)
+	};
 
 	private final HashMap<String, Command> commands;
 	private String myName = null;
@@ -57,14 +59,14 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 		for (Command cmd : COMMANDS)
 			commands.put(cmd.getName(), cmd);
 		if (BotConfig.getInstance().getAlphacodersToken().startsWith("<")
-				|| BotConfig.getInstance().getAlphacodersToken().isEmpty()) {
+			|| BotConfig.getInstance().getAlphacodersToken().isEmpty()) {
 			System.err.println("Warning: No AlphaCoders Token specified in config file!");
 			System.err.println("The /rikka and /wa commands will be disabled.");
 			commands.get("rikka").disable();
 			commands.get("wa").disable();
 		}
 		if (BotConfig.getInstance().getPixabayToken().startsWith("<")
-				|| BotConfig.getInstance().getPixabayToken().isEmpty()) {
+			|| BotConfig.getInstance().getPixabayToken().isEmpty()) {
 			System.err.println("Warning: No Pixabay Token specified in config file!");
 			System.err.println("The /flausch and /pb commands will be disabled.");
 			commands.get("flausch").disable();
@@ -114,8 +116,8 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 									stream = new URL(result.imageUrl).openStream();
 								if (result.isGIF) {
 									SendDocument document = new SendDocument()
-											.setChatId(update.getMessage().getChatId())
-											.setNewDocument("blub.gif", stream);
+										.setChatId(update.getMessage().getChatId())
+										.setNewDocument("blub.gif", stream);
 									if (result.text != null)
 										document.setCaption(result.text);
 									if (result.replyToId != -1)
@@ -123,8 +125,8 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 									cmd.processSendResult(result.imageUrl, sendDocument(document).getDocument().getFileId());
 								} else {
 									SendPhoto photo = new SendPhoto()
-											.setChatId(update.getMessage().getChatId())
-											.setNewPhoto("photo", stream);
+										.setChatId(update.getMessage().getChatId())
+										.setNewPhoto("photo", stream);
 									if (result.text != null)
 										photo.setCaption(result.text);
 									if (result.replyToId != -1)
@@ -137,10 +139,10 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 						} else if (result.audioUrl != null) {
 							try {
 								SendVoice voice = new SendVoice()
-										.setChatId(update.getMessage().getChatId());
+									.setChatId(update.getMessage().getChatId());
 								if (result.mediaId == null) {
 									InputStream stream =
-											getClass().getResource(result.audioUrl).openStream();
+										getClass().getResource(result.audioUrl).openStream();
 									voice.setNewVoice("audio.ogg", stream);
 								} else {
 									voice.setVoice(result.mediaId);
@@ -156,8 +158,8 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 						} else {
 							// It's a text message
 							SendMessage message = new SendMessage()
-									.setChatId(update.getMessage().getChatId())
-									.setText(result.text);
+								.setChatId(update.getMessage().getChatId())
+								.setText(result.text);
 							if (result.replyToId != -1)
 								message.setReplyToMessageId(result.replyToId);
 							try {

@@ -45,8 +45,10 @@ public class FlauschCommand extends Command {
 	private final AsyncFileHelper fileHelper;
 
 	private static final String[] BLOCKTAGS =
-			{"baby", "child", "chicken", "figure", "keinohrhase", "man", "cat",
-					"gold foil", "girl", "paddle board"};
+		{
+			"baby", "child", "chicken", "figure", "keinohrhase", "man", "cat",
+			"gold foil", "girl", "paddle board"
+		};
 
 	public FlauschCommand() {
 		fileHelper = new AsyncFileHelper("flausch.json");
@@ -83,8 +85,8 @@ public class FlauschCommand extends Command {
 					for (int i = 0; i < urlsData.length(); i++) {
 						JSONArray values = urlsData.getJSONArray(i);
 						imgUrls.add(new String[]{
-								values.getString(0),
-								values.optString(1, null)
+							values.getString(0),
+							values.optString(1, null)
 						});
 					}
 					lastRefreshDate = new Date(fileJson.getLong("refresh_date"));
@@ -94,21 +96,21 @@ public class FlauschCommand extends Command {
 			}
 		}
 		if (imgUrls == null
-				|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600 * 1000)) {
+			|| new Date().getTime() >= lastRefreshDate.getTime() + (24 * 3600 * 1000)) {
 			imgUrls = new ArrayList<>();
 			// Populate the list with pixabay URLs
 			try {
 				for (int j = 1; j < 10; j++) {
 					URL url = new URL("https://pixabay.com/api/"
-							+ "?key=" + BotConfig.getInstance().getPixabayToken() + "&q=bunny"
-							+ "&image_type=photo&category=animals&pretty=false"
-							+ "&page=" + j);
+						+ "?key=" + BotConfig.getInstance().getPixabayToken() + "&q=bunny"
+						+ "&image_type=photo&category=animals&pretty=false"
+						+ "&page=" + j);
 					HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 					if (con.getResponseCode() == HTTP_OK) {
 						BufferedReader br =
-								new BufferedReader(
-										new InputStreamReader(con.getInputStream())
-								);
+							new BufferedReader(
+								new InputStreamReader(con.getInputStream())
+							);
 						String result = "";
 						String line;
 						while ((line = br.readLine()) != null)
@@ -121,8 +123,8 @@ public class FlauschCommand extends Command {
 							String tags = currentImg.getString("tags");
 							if (stringContainsAny(tags, BLOCKTAGS)) continue;
 							imgUrls.add(new String[]{
-									currentImg.getString("webformatURL"),
-									null
+								currentImg.getString("webformatURL"),
+								null
 							});
 						}
 						lastRefreshDate = new Date();

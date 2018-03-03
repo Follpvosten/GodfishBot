@@ -51,8 +51,8 @@ public class BitchslapCommand extends Command {
 		} else {
 			if (params != null) {
 				result.text =
-						message.getFrom().getFirstName()
-								+ " bitch slapped " + params;
+					message.getFrom().getFirstName()
+						+ " bitch slapped " + params;
 			} else {
 				result.imageUrl = "/images/bitchslap.gif";
 				result.isGIF = true;

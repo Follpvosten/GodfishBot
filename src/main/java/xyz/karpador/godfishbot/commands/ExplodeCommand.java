@@ -26,14 +26,16 @@ import xyz.karpador.godfishbot.Main;
  */
 public class ExplodeCommand extends Command {
 
-	private static final String[] EXPLODE_AT_MESSAGES =
-			{"%1$s exploded all over %2$s's face", "%1$s blew up at %2$s", "%1$s kamikaze'd %2$s",
-					"%1$s blew up %2$s's house", "%1$s used Explosion! %2$s fainted!",
-					"%1$s ate a grenade from %2$s"};
-	private static final String[] EXPLODE_MESSAGES =
-			{"%1$s exploded", "%1$s blew up", "%1$s detonated", "%1$s used Explosion!",
-					"%1$s used Self-Destruct!", "%1$s played minesweeper in real-life",
-					"%1$s ate a grenade"};
+	private static final String[] EXPLODE_AT_MESSAGES = {
+		"%1$s exploded all over %2$s's face", "%1$s blew up at %2$s", "%1$s kamikaze'd %2$s",
+		"%1$s blew up %2$s's house", "%1$s used Explosion! %2$s fainted!",
+		"%1$s ate a grenade from %2$s"
+	};
+	private static final String[] EXPLODE_MESSAGES = {
+		"%1$s exploded", "%1$s blew up", "%1$s detonated", "%1$s used Explosion!",
+		"%1$s used Self-Destruct!", "%1$s played minesweeper in real-life",
+		"%1$s ate a grenade"
+	};
 
 	@Override
 	public String getName() {
@@ -55,16 +57,16 @@ public class ExplodeCommand extends Command {
 		CommandResult result = new CommandResult();
 		if (params == null) {
 			result.text =
-					String.format(
-							EXPLODE_MESSAGES[Main.Random.nextInt(EXPLODE_MESSAGES.length)],
-							message.getFrom().getFirstName()
-					);
+				String.format(
+					EXPLODE_MESSAGES[Main.Random.nextInt(EXPLODE_MESSAGES.length)],
+					message.getFrom().getFirstName()
+				);
 		} else {
 			result.text =
-					String.format(
-							EXPLODE_AT_MESSAGES[Main.Random.nextInt(EXPLODE_AT_MESSAGES.length)],
-							message.getFrom().getFirstName(), params
-					);
+				String.format(
+					EXPLODE_AT_MESSAGES[Main.Random.nextInt(EXPLODE_AT_MESSAGES.length)],
+					message.getFrom().getFirstName(), params
+				);
 		}
 		return result;
 	}

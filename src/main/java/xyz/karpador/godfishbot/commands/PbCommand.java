@@ -55,17 +55,17 @@ public class PbCommand extends Command {
 		CommandResult result = new CommandResult();
 		try {
 			String urlString = "https://pixabay.com/api/"
-					+ "?key=" + BotConfig.getInstance().getPixabayToken()
-					+ "&pretty=false";
+				+ "?key=" + BotConfig.getInstance().getPixabayToken()
+				+ "&pretty=false";
 			if (params != null)
 				urlString += "&q=" + URLEncoder.encode(params, "UTF-8");
 			URL url = new URL(urlString);
 			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String httpResult = "";
 				String line;
 				while ((line = br.readLine()) != null)
@@ -86,7 +86,7 @@ public class PbCommand extends Command {
 					con = (HttpsURLConnection) url.openConnection();
 					if (con.getResponseCode() == HTTP_OK) {
 						br = new BufferedReader(
-								new InputStreamReader(con.getInputStream())
+							new InputStreamReader(con.getInputStream())
 						);
 						httpResult = "";
 						while ((line = br.readLine()) != null)

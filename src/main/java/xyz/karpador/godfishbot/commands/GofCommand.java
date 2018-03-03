@@ -62,9 +62,9 @@ public class GofCommand extends Command {
 			con.setConnectTimeout(4000);
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String httpResult = "";
 				String line;
 				while ((line = br.readLine()) != null)
@@ -80,7 +80,7 @@ public class GofCommand extends Command {
 						con.setConnectTimeout(4000);
 						if (con.getResponseCode() == HTTP_OK) {
 							br = new BufferedReader(
-									new InputStreamReader(con.getInputStream())
+								new InputStreamReader(con.getInputStream())
 							);
 							httpResult = "";
 							while ((line = br.readLine()) != null)

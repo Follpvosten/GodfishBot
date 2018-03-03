@@ -57,16 +57,16 @@ public class WaCommand extends Command {
 			// Get a wallpaper by search term
 			try {
 				URL url = new URL(
-						"https://wall.alphacoders.com/api2.0/get.php"
-								+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
-								+ "&method=search&term=" + URLEncoder.encode(params, "UTF-8")
+					"https://wall.alphacoders.com/api2.0/get.php"
+						+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
+						+ "&method=search&term=" + URLEncoder.encode(params, "UTF-8")
 				);
 				HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 				if (con.getResponseCode() == HTTP_OK) {
 					BufferedReader br =
-							new BufferedReader(
-									new InputStreamReader(con.getInputStream())
-							);
+						new BufferedReader(
+							new InputStreamReader(con.getInputStream())
+						);
 					String httpResult = br.readLine();
 					JSONObject resultJson = new JSONObject(httpResult);
 					int totalHits = resultJson.getInt("total_match");
@@ -83,7 +83,7 @@ public class WaCommand extends Command {
 						con = (HttpsURLConnection) url.openConnection();
 						if (con.getResponseCode() == HTTP_OK) {
 							br = new BufferedReader(
-									new InputStreamReader(con.getInputStream())
+								new InputStreamReader(con.getInputStream())
 							);
 							httpResult = br.readLine();
 							resultJson = new JSONObject(httpResult);
@@ -106,16 +106,16 @@ public class WaCommand extends Command {
 			// Get a random wallpaper
 			try {
 				URL url = new URL(
-						"https://wall.alphacoders.com/api2.0/get.php"
-								+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
-								+ "&method=random&count=1"
+					"https://wall.alphacoders.com/api2.0/get.php"
+						+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
+						+ "&method=random&count=1"
 				);
 				HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 				if (con.getResponseCode() == HTTP_OK) {
 					BufferedReader br =
-							new BufferedReader(
-									new InputStreamReader(con.getInputStream())
-							);
+						new BufferedReader(
+							new InputStreamReader(con.getInputStream())
+						);
 					String httpResult = br.readLine();
 					JSONObject resultJson = new JSONObject(httpResult);
 					if (resultJson.getBoolean("success")) {

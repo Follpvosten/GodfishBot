@@ -53,15 +53,15 @@ public class YodaCommand extends Command {
 		if (params == null) return new CommandResult("Please provide a sentence.");
 		try {
 			URL url = new URL("https://yoda.p.mashape.com/yoda?sentence="
-					+ URLEncoder.encode(params, "UTF-8"));
+				+ URLEncoder.encode(params, "UTF-8"));
 			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 			con.setRequestProperty("X-Mashape-Key", BotConfig.getInstance().getMashapeToken());
 			con.setRequestProperty("Accept", "text/plain");
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String result = br.readLine();
 				return new CommandResult(result);
 			}

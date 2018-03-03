@@ -49,9 +49,9 @@ public class TrumpCommand extends Command {
 			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String result = br.readLine();
 				JSONObject resultJson = new JSONObject(result);
 				return new CommandResult(resultJson.getString("message"));

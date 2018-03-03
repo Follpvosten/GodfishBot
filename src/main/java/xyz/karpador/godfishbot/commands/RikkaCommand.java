@@ -72,9 +72,9 @@ public class RikkaCommand extends Command {
 						for (int i = 0; i < urlsData.length(); i++) {
 							JSONArray values = urlsData.getJSONArray(i);
 							imgUrls.add(new String[]{
-									values.getString(0),
-									values.getString(1),
-									values.optString(2, null)
+								values.getString(0),
+								values.getString(1),
+								values.optString(2, null)
 							});
 						}
 					} catch (JSONException e) {
@@ -88,16 +88,16 @@ public class RikkaCommand extends Command {
 				try {
 					for (int j = 1; j < 4; j++) {
 						URL url = new URL(
-								"https://wall.alphacoders.com/api2.0/get.php"
-										+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
-										+ "&method=tag&id=35982&page=" + j
+							"https://wall.alphacoders.com/api2.0/get.php"
+								+ "?auth=" + BotConfig.getInstance().getAlphacodersToken()
+								+ "&method=tag&id=35982&page=" + j
 						);
 						HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 						if (con.getResponseCode() == HTTP_OK) {
 							BufferedReader br =
-									new BufferedReader(
-											new InputStreamReader(con.getInputStream())
-									);
+								new BufferedReader(
+									new InputStreamReader(con.getInputStream())
+								);
 							String result = br.readLine();
 							JSONObject resultJson = new JSONObject(result);
 							if (resultJson.getBoolean("success")) {
@@ -105,9 +105,9 @@ public class RikkaCommand extends Command {
 								for (int i = 0; i < imgs.length(); i++) {
 									JSONObject currentImg = imgs.getJSONObject(i);
 									imgUrls.add(new String[]{
-											currentImg.getString("url_thumb"),
-											currentImg.getString("url_image"),
-											null
+										currentImg.getString("url_thumb"),
+										currentImg.getString("url_image"),
+										null
 									});
 								}
 								writeCurrentState();

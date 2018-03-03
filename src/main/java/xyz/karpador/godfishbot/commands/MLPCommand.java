@@ -60,16 +60,16 @@ public class MLPCommand extends Command {
 			if (!params.endsWith(","))
 				params += ",";
 			String urlString =
-					"http://mylittlefacewhen.com/api/v3/face/"
-							+ "?tags__all=" + URLEncoder.encode(params, "UTF-8")
-							+ "&limit=100&accepted=true&format=json";
+				"http://mylittlefacewhen.com/api/v3/face/"
+					+ "?tags__all=" + URLEncoder.encode(params, "UTF-8")
+					+ "&limit=100&accepted=true&format=json";
 			URL url = new URL(urlString);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
-						new BufferedReader(
-								new InputStreamReader(con.getInputStream())
-						);
+					new BufferedReader(
+						new InputStreamReader(con.getInputStream())
+					);
 				String httpResult = br.readLine();
 				JSONArray jsonResult = new JSONObject(httpResult).getJSONArray("objects");
 				int randIndex = Main.Random.nextInt(jsonResult.length());
@@ -79,9 +79,9 @@ public class MLPCommand extends Command {
 					result.isGIF = true;
 			} else {
 				result.text =
-						"mylittlefacewhen.com returned error code " +
-								con.getResponseCode() + ": " +
-								con.getResponseMessage();
+					"mylittlefacewhen.com returned error code " +
+						con.getResponseCode() + ": " +
+						con.getResponseMessage();
 			}
 		} catch (IOException | JSONException e) {
 			e.printStackTrace();

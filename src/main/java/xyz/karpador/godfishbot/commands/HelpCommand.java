@@ -46,13 +46,13 @@ public class HelpCommand extends Command {
 	@Override
 	public CommandResult getReply(String params, Message message, String myName) {
 		if (params == null) {
-			String commands = "";
+			StringBuilder commands = new StringBuilder();
 			for (Command cmd : GodfishPollingBot.COMMANDS) {
-				commands += cmd.getUsage();
-				if (cmd.isDisabled()) commands += " (DISABLED)";
-				commands += "\n";
+				commands.append(cmd.getUsage());
+				if (cmd.isDisabled()) commands.append(" (DISABLED)");
+				commands.append("\n");
 			}
-			return new CommandResult(String.format(USAGE, commands));
+			return new CommandResult(String.format(USAGE, commands.toString()));
 		} else {
 			for (Command cmd : GodfishPollingBot.COMMANDS) {
 				if (cmd.getName().equals(params))

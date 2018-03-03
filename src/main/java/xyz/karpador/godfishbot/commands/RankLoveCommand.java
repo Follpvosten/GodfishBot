@@ -64,18 +64,18 @@ public class RankLoveCommand extends Command {
 			if (name1.equals(name2)) return;
 			for (TestResult tr : testResults) {
 				if ((tr.fname.equals(name1) && tr.sname.equals(name2)) ||
-						(tr.sname.equals(name1) && tr.fname.equals(name2)))
+					(tr.sname.equals(name1) && tr.fname.equals(name2)))
 					return;
 			}
 			testResults.add(
-					new TestResult(
-							name1,
-							name2,
-							getLovePer(
-									name1.toUpperCase(),
-									name2.toUpperCase()
-							)
+				new TestResult(
+					name1,
+					name2,
+					getLovePer(
+						name1.toUpperCase(),
+						name2.toUpperCase()
 					)
+				)
 			);
 		}
 
@@ -202,8 +202,8 @@ public class RankLoveCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Test your love by putting in your f***ing names (because that says so much).\n"
-				+ "Don't use spaces in the names. You're gonna die otherwise.";
+		return "Put in a list of names (separated by spaces) and find out who " +
+			"should date.";
 	}
 
 	@Override
