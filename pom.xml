@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.karpador</groupId>
     <artifactId>GodfishBot</artifactId>
-    <version>0.3.13-SNAPSHOT</version>
+    <version>0.3.14-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -34,8 +34,8 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>xyz.karpador.godfishbot.Main</mainClass>
-			    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-			    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -46,8 +46,8 @@
                     <archive>
                         <manifest>
                             <mainClass>xyz.karpador.godfishbot.Main</mainClass>
-			    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-			    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -71,7 +71,7 @@
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <phase>install</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>

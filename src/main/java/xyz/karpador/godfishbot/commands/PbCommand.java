@@ -66,11 +66,11 @@ public class PbCommand extends Command {
 					new BufferedReader(
 						new InputStreamReader(con.getInputStream())
 					);
-				String httpResult = "";
+				StringBuilder httpResult = new StringBuilder();
 				String line;
 				while ((line = br.readLine()) != null)
-					httpResult += line;
-				JSONObject resultJson = new JSONObject(httpResult);
+					httpResult.append(line);
+				JSONObject resultJson = new JSONObject(httpResult.toString());
 				int totalHits = resultJson.getInt("totalHits");
 				if (totalHits < 1) {
 					result.replyToId = message.getMessageId();
@@ -79,7 +79,7 @@ public class PbCommand extends Command {
 				}
 				int pageNumber = 1;
 				if (totalHits > 20) // Generate a valid page number.
-					pageNumber = Main.Random.nextInt((int) Math.ceil(totalHits / 20)) + 1;
+					pageNumber = Main.Random.nextInt((int) Math.ceil(totalHits / 15)) + 1;
 				if (pageNumber > 1) {
 					urlString += "&page=" + pageNumber;
 					url = new URL(urlString);
@@ -88,10 +88,10 @@ public class PbCommand extends Command {
 						br = new BufferedReader(
 							new InputStreamReader(con.getInputStream())
 						);
-						httpResult = "";
+						httpResult.setLength(0);
 						while ((line = br.readLine()) != null)
-							httpResult += line;
-						resultJson = new JSONObject(httpResult);
+							httpResult.append(line);
+						resultJson = new JSONObject(httpResult.toString());
 					}
 				}
 				JSONArray hits = resultJson.getJSONArray("hits");

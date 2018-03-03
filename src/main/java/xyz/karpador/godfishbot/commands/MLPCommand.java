@@ -24,17 +24,23 @@ import java.net.HttpURLConnection;
 import static java.net.HttpURLConnection.HTTP_OK;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
 import xyz.karpador.godfishbot.Main;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  *
  * @author Follpvosten
  */
 public class MLPCommand extends Command {
+
+	private final HashMap<String, String> knownImages = new HashMap<>();
 
 	@Override
 	public String getName() {
@@ -48,7 +54,7 @@ public class MLPCommand extends Command {
 
 	@Override
 	public String getDescription() {
-		return "Get a face from MyLittleFaceWhen.\n<tags>: Search tags separated by commas";
+		return "Get an image from Derpibooru.\n<tags>: Search tags separated by commas";
 	}
 
 	@Override
@@ -57,29 +63,58 @@ public class MLPCommand extends Command {
 			return new CommandResult(getUsage() + "\n" + getDescription());
 		CommandResult result = new CommandResult();
 		try {
-			if (!params.endsWith(","))
-				params += ",";
 			String urlString =
-				"http://mylittlefacewhen.com/api/v3/face/"
-					+ "?tags__all=" + URLEncoder.encode(params, "UTF-8")
-					+ "&limit=100&accepted=true&format=json";
+				"https://derpibooru.org/search.json?q="
+					+ URLEncoder.encode(params, "UTF-8")
+					.replace("%20", "+");
 			URL url = new URL(urlString);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
 					new BufferedReader(
 						new InputStreamReader(con.getInputStream())
 					);
-				String httpResult = br.readLine();
-				JSONArray jsonResult = new JSONObject(httpResult).getJSONArray("objects");
-				int randIndex = Main.Random.nextInt(jsonResult.length());
-				JSONObject jsonObj = jsonResult.getJSONObject(randIndex);
-				result.imageUrl = "http://mylittlefacewhen.com" + jsonObj.getString("image");
+				StringBuilder httpResult = new StringBuilder();
+				String line;
+				while ((line = br.readLine()) != null)
+					httpResult.append(line);
+				JSONObject resultJson = new JSONObject(httpResult.toString());
+				int totalHits = resultJson.getInt("total");
+				if (totalHits < 1) {
+					result.replyToId = message.getMessageId();
+					result.text = "No results found.";
+					return result;
+				}
+				int pageNumber = 1;
+				if (totalHits > 20) // Generate a valid page number.
+					pageNumber = Main.Random.nextInt((int) Math.ceil(totalHits / 20)) + 1;
+				if (pageNumber > 1) {
+					urlString += "&page=" + pageNumber;
+					url = new URL(urlString);
+					con = (HttpsURLConnection) url.openConnection();
+					if (con.getResponseCode() == HTTP_OK) {
+						br = new BufferedReader(
+							new InputStreamReader(con.getInputStream())
+						);
+						httpResult.setLength(0);
+						while ((line = br.readLine()) != null)
+							httpResult.append(line);
+						resultJson = new JSONObject(httpResult.toString());
+					}
+				}
+				JSONArray hits = resultJson.getJSONArray("search");
+				int imageIndex = Main.Random.nextInt(hits.length());
+				JSONObject img = hits.getJSONObject(imageIndex);
+				result.imageUrl = "https:" + img.getString("image");
 				if (result.imageUrl.toLowerCase().endsWith(".gif"))
 					result.isGIF = true;
+				if(knownImages.containsKey(result.imageUrl))
+					result.mediaId = knownImages.get(result.imageUrl);
+				result.text = "From derpibooru.org "
+					+ "(Source: " + img.getString("source_url") + ")";
 			} else {
 				result.text =
-					"mylittlefacewhen.com returned error code " +
+					"derpibooru.org returned error code " +
 						con.getResponseCode() + ": " +
 						con.getResponseMessage();
 			}
@@ -90,4 +125,8 @@ public class MLPCommand extends Command {
 		return result;
 	}
 
+	@Override
+	public void processSendResult(String mediaUrl, String mediaId) {
+		knownImages.put(mediaUrl, mediaId);
+	}
 }
