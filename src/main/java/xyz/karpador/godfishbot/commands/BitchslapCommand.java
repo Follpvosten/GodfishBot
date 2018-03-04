@@ -25,6 +25,8 @@ import org.telegram.telegrambots.api.objects.Message;
  */
 public class BitchslapCommand extends Command {
 
+	private String mediaId = null;
+
 	@Override
 	public String getName() {
 		return "bitchslap";
@@ -47,6 +49,8 @@ public class BitchslapCommand extends Command {
 		if (message.getReplyToMessage() != null) {
 			result.replyToId = message.getReplyToMessage().getMessageId();
 			result.imageUrl = "/images/bitchslap.gif";
+			if(mediaId != null)
+				result.mediaId = mediaId;
 			result.isGIF = true;
 		} else {
 			if (params != null) {
@@ -55,10 +59,17 @@ public class BitchslapCommand extends Command {
 						+ " bitch slapped " + params;
 			} else {
 				result.imageUrl = "/images/bitchslap.gif";
+				if(mediaId != null)
+					result.mediaId = mediaId;
 				result.isGIF = true;
 			}
 		}
 		return result;
 	}
 
+	@Override
+	public void processSendResult(String mediaUrl, String mediaId) {
+		if (this.mediaId == null)
+			this.mediaId = mediaId;
+	}
 }

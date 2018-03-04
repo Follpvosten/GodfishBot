@@ -25,6 +25,7 @@ import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.methods.send.SendVoice;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -104,71 +105,91 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 
 				Command cmd = commands.get(cmdName.toLowerCase());
 				if (cmd != null) {
-					CommandResult result = cmd.getReply(params, update.getMessage(), myName);
-					if (result != null) {
-						if (result.imageUrl != null) {
-							// It's an image
-							try {
-								InputStream stream;
-								if (!result.imageUrl.startsWith("http"))
-									stream = getClass().getResource(result.imageUrl).openStream();
-								else
-									stream = new URL(result.imageUrl).openStream();
-								if (result.isGIF) {
-									SendDocument document = new SendDocument()
-										.setChatId(update.getMessage().getChatId())
-										.setNewDocument("blub.gif", stream);
-									if (result.text != null)
-										document.setCaption(result.text);
-									if (result.replyToId != -1)
-										document.setReplyToMessageId(result.replyToId);
-									cmd.processSendResult(result.imageUrl, sendDocument(document).getDocument().getFileId());
-								} else {
-									SendPhoto photo = new SendPhoto()
-										.setChatId(update.getMessage().getChatId())
-										.setNewPhoto("photo", stream);
-									if (result.text != null)
-										photo.setCaption(result.text);
-									if (result.replyToId != -1)
-										photo.setReplyToMessageId(result.replyToId);
-									cmd.processSendResult(result.imageUrl, sendPhoto(photo).getPhoto().get(0).getFileId());
-								}
-							} catch (IOException | TelegramApiException e) {
-								e.printStackTrace();
-							}
-						} else if (result.audioUrl != null) {
-							try {
-								SendVoice voice = new SendVoice()
-									.setChatId(update.getMessage().getChatId());
-								if (result.mediaId == null) {
-									InputStream stream =
-										getClass().getResource(result.audioUrl).openStream();
-									voice.setNewVoice("audio.ogg", stream);
-								} else {
-									voice.setVoice(result.mediaId);
-								}
-								if (result.text != null)
-									voice.setCaption(result.text);
-								if (result.replyToId != -1)
-									voice.setReplyToMessageId(result.replyToId);
-								cmd.processSendResult(result.audioUrl, sendVoice(voice).getVoice().getFileId());
-							} catch (IOException | TelegramApiException e) {
-								e.printStackTrace();
-							}
+					runCommand(cmd, params, update.getMessage());
+				}
+			}
+		}
+	}
+
+	private InputStream getImageInputStream(String imageUrl) throws IOException {
+		InputStream stream;
+		if (!imageUrl.startsWith("http"))
+			stream = getClass().getResource(imageUrl).openStream();
+		else
+			stream = new URL(imageUrl).openStream();
+		return stream;
+	}
+
+	private void runCommand(Command cmd, String params, Message msg) {
+		CommandResult result = cmd.getReply(params, msg, myName);
+		if (result != null) {
+			if (result.imageUrl != null) {
+				// It's an image
+				try {
+					if (result.isGIF) {
+						SendDocument document = new SendDocument()
+							.setChatId(msg.getChatId());
+							//.setNewDocument("blub.gif", stream);
+						if(result.mediaId == null) {
+							document.setNewDocument(
+								"blub.gif",
+								getImageInputStream(result.imageUrl)
+							);
 						} else {
-							// It's a text message
-							SendMessage message = new SendMessage()
-								.setChatId(update.getMessage().getChatId())
-								.setText(result.text);
-							if (result.replyToId != -1)
-								message.setReplyToMessageId(result.replyToId);
-							try {
-								sendMessage(message);
-							} catch (TelegramApiException e) {
-								e.printStackTrace();
-							}
+							document.setDocument(result.mediaId);
 						}
+						if (result.text != null)
+							document.setCaption(result.text);
+						if (result.replyToId != -1)
+							document.setReplyToMessageId(result.replyToId);
+						cmd.processSendResult(result.imageUrl, sendDocument(document).getDocument().getFileId());
+					} else {
+						SendPhoto photo = new SendPhoto()
+							.setChatId(msg.getChatId());
+						if(result.mediaId == null) {
+							photo.setNewPhoto("photo", getImageInputStream(result.imageUrl));
+						} else {
+							photo.setPhoto(result.mediaId);
+						}
+						if (result.text != null)
+							photo.setCaption(result.text);
+						if (result.replyToId != -1)
+							photo.setReplyToMessageId(result.replyToId);
+						cmd.processSendResult(result.imageUrl, sendPhoto(photo).getPhoto().get(0).getFileId());
 					}
+				} catch (IOException | TelegramApiException e) {
+					e.printStackTrace();
+				}
+			} else if (result.audioUrl != null) {
+				try {
+					SendVoice voice = new SendVoice()
+						.setChatId(msg.getChatId());
+					if (result.mediaId == null) {
+						InputStream stream =
+							getClass().getResource(result.audioUrl).openStream();
+						voice.setNewVoice("audio.ogg", stream);
+					} else {
+						voice.setVoice(result.mediaId);
+					}
+					if (result.text != null)
+						voice.setCaption(result.text);
+					if (result.replyToId != -1)
+						voice.setReplyToMessageId(result.replyToId);
+					cmd.processSendResult(result.audioUrl, sendVoice(voice).getVoice().getFileId());
+				} catch (IOException | TelegramApiException e) {
+					e.printStackTrace();
+				}
+			} else {
+				// It's a text message
+				SendMessage message = new SendMessage()
+					.setChatId(msg.getChatId())
+					.setText(result.text);
+				if (result.replyToId != -1)
+					message.setReplyToMessageId(result.replyToId);
+				try {
+					sendMessage(message);
+				} catch (TelegramApiException e) {
+					e.printStackTrace();
 				}
 			}
 		}
