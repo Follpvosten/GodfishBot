@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
 import xyz.karpador.godfishbot.Main;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  *
  * @author Follpvosten
@@ -56,36 +58,36 @@ public class GofCommand extends Command {
 			return new CommandResult(getUsage() + "\n" + getDescription());
 		CommandResult result = new CommandResult();
 		try {
-			String urlString = "http://gifbase.com/tag/" + params + "?format=json";
+			String urlString = "https://gifbase.com/tag/" + params + "?format=json";
 			URL url = new URL(urlString);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 			con.setConnectTimeout(4000);
 			if (con.getResponseCode() == HTTP_OK) {
 				BufferedReader br =
 					new BufferedReader(
 						new InputStreamReader(con.getInputStream())
 					);
-				String httpResult = "";
+				StringBuilder httpResult = new StringBuilder();
 				String line;
 				while ((line = br.readLine()) != null)
-					httpResult += line;
-				JSONObject resultJson = new JSONObject(httpResult);
+					httpResult.append(line);
+				JSONObject resultJson = new JSONObject(httpResult.toString());
 				int pageCount = resultJson.optInt("page_count", 1);
 				if (pageCount > 1) {
 					int page = Main.Random.nextInt(pageCount - 1) + 1;
 					if (page != resultJson.getInt("page_current")) {
 						urlString += "&p=" + page;
 						url = new URL(urlString);
-						con = (HttpURLConnection) url.openConnection();
+						con = (HttpsURLConnection) url.openConnection();
 						con.setConnectTimeout(4000);
 						if (con.getResponseCode() == HTTP_OK) {
 							br = new BufferedReader(
 								new InputStreamReader(con.getInputStream())
 							);
-							httpResult = "";
+							httpResult.setLength(0);
 							while ((line = br.readLine()) != null)
-								httpResult += line;
-							resultJson = new JSONObject(httpResult);
+								httpResult.append(line);
+							resultJson = new JSONObject(httpResult.toString());
 						}
 					}
 				}
@@ -95,6 +97,11 @@ public class GofCommand extends Command {
 					result.imageUrl = gif.getString("url");
 				} else
 					return null;
+			} else {
+				return new CommandResult(
+					"gifbase.com responded with error code: "
+					+ con.getResponseCode() + ": " + con.getResponseMessage()
+				);
 			}
 		} catch (IOException | JSONException e) {
 			e.printStackTrace();
