@@ -110,8 +110,10 @@ public class MLPCommand extends Command {
 					result.isGIF = true;
 				if(knownImages.containsKey(result.imageUrl))
 					result.mediaId = knownImages.get(result.imageUrl);
-				result.text = "From derpibooru.org "
-					+ "(Source: " + img.getString("source_url") + ")";
+				result.text = "From derpibooru.org";
+					//+ "(Source: " + img.getString("source_url") + ")";
+				if(!img.isNull("source_url"))
+					result.text += " (Source: " + img.getString("source_url") + ")";
 			} else {
 				result.text =
 					"derpibooru.org returned error code " +
