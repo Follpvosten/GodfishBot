@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.telegram.telegrambots.api.objects.Message;
 import xyz.karpador.godfishbot.BotConfig;
-import xyz.karpador.godfishbot.Main;
 
 /**
  *

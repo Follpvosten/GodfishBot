@@ -31,8 +31,6 @@ public class RateHotCommand extends Command {
 	private final String name;
 	private final int topCount;
 
-	private final String HOTSTRING = "SEXÄY";
-
 	/**
 	 * @param cmdName  The name of the command.
 	 * @param topCount The maximum length of the top list returned.
@@ -64,7 +62,7 @@ public class RateHotCommand extends Command {
 		private final String name;
 		private final int rating;
 
-		public Rating(String name, int rating) {
+		Rating(String name, int rating) {
 			this.name = name;
 			this.rating = rating;
 		}
@@ -95,7 +93,8 @@ public class RateHotCommand extends Command {
 		// The randomizer helps deciding the numbers added to the result
 		for (int i = 0; i < name.length(); i++) {
 			// Get a nice number...
-			long value = name.charAt(i) + HOTSTRING.charAt(random.nextInt(HOTSTRING.length()));
+			String hot = "SEXÄY";
+			long value = name.charAt(i) + hot.charAt(random.nextInt(hot.length()));
 			while (value > 0) {
 				// And shift it into the result
 				result++;
@@ -121,13 +120,13 @@ public class RateHotCommand extends Command {
 				ratings.add(new Rating(currentName, getNameRating(currentName)));
 			}
 			Collections.sort(ratings);
-			String result = "";
+			StringBuilder result = new StringBuilder();
 			for (int i = 0; i < ratings.size() && i < topCount; i++) {
-				result += (i + 1) + ". " + ratings.get(i).toString();
+				result.append(i + 1).append(". ").append(ratings.get(i));
 				if (i != ratings.size() - 1 && i != topCount - 1)
-					result += "\n";
+					result.append("\n");
 			}
-			return new CommandResult(result);
+			return new CommandResult(result.toString());
 		}
 	}
 

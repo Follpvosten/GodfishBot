@@ -20,7 +20,6 @@ package xyz.karpador.godfishbot.commands;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import static java.net.HttpURLConnection.HTTP_OK;
 import java.net.URL;
 import java.net.URLEncoder;

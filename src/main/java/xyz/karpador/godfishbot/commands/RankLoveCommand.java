@@ -33,11 +33,11 @@ public class RankLoveCommand extends Command {
 	private class TestResultList {
 		private class TestResult implements Comparable<TestResult> {
 
-			public final String fname;
-			public final String sname;
-			public final int percentage;
+			final String fname;
+			final String sname;
+			final int percentage;
 
-			public TestResult(String fname, String sname, int percentage) {
+			TestResult(String fname, String sname, int percentage) {
 				this.fname = fname;
 				this.sname = sname;
 				this.percentage = percentage;
@@ -56,11 +56,11 @@ public class RankLoveCommand extends Command {
 
 		private final List<TestResult> testResults;
 
-		public TestResultList() {
+		TestResultList() {
 			testResults = new ArrayList<>();
 		}
 
-		public void addTestResult(String name1, String name2) {
+		void addTestResult(String name1, String name2) {
 			if (name1.equals(name2)) return;
 			for (TestResult tr : testResults) {
 				if ((tr.fname.equals(name1) && tr.sname.equals(name2)) ||
@@ -79,15 +79,15 @@ public class RankLoveCommand extends Command {
 			);
 		}
 
-		public String getRankingString() {
-			String result = "";
+		String getRankingString() {
+			StringBuilder result = new StringBuilder();
 			Collections.sort(testResults);
 			for (int i = 0; i < testResults.size(); i++) {
-				result += (i + 1) + ". " + testResults.get(i).toString();
+				result.append(i + 1).append(". ").append(testResults.get(i));
 				if (i != testResults.size() - 1)
-					result += "\n";
+					result.append("\n");
 			}
-			return result;
+			return result.toString();
 		}
 	}
 

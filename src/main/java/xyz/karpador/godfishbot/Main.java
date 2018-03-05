@@ -27,7 +27,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
  * @author Follpvosten
  */
 public class Main {
-	public static Random Random = new Random();
+	public static final Random Random = new Random();
 
 	public static void main(String[] args) {
 		System.out.println("Initializing ApiContext...");

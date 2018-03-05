@@ -111,11 +111,11 @@ public class FlauschCommand extends Command {
 							new BufferedReader(
 								new InputStreamReader(con.getInputStream())
 							);
-						String result = "";
+						StringBuilder result = new StringBuilder();
 						String line;
 						while ((line = br.readLine()) != null)
-							result += line;
-						JSONObject resultJson = new JSONObject(result);
+							result.append(line);
+						JSONObject resultJson = new JSONObject(result.toString());
 						JSONArray hits = resultJson.getJSONArray("hits");
 
 						for (int i = 0; i < hits.length(); i++) {

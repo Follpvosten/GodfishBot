@@ -66,11 +66,11 @@ public class GiphyCommand extends Command {
 					new BufferedReader(
 						new InputStreamReader(con.getInputStream())
 					);
-				String httpResult = "";
+				StringBuilder httpResult = new StringBuilder();
 				String line;
 				while ((line = br.readLine()) != null)
-					httpResult += line;
-				JSONObject resultJson = new JSONObject(httpResult);
+					httpResult.append(line);
+				JSONObject resultJson = new JSONObject(httpResult.toString());
 				if (resultJson.getJSONObject("meta").getInt("status") == HTTP_OK) {
 					result.imageUrl =
 						"http://i.giphy.com/" +
