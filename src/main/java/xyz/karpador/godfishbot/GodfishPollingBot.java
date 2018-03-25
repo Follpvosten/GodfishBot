@@ -52,7 +52,12 @@ public class GodfishPollingBot extends TelegramLongPollingBot {
 		new WaCommand(), new YodaCommand(), new QuoteCommand(),
 		new TestLoveCommand(), new RankLoveCommand(),
 		new ImageCommand("bully", "/images/bully.jpg", true),
-		new ImageCommand("bullyback", "/images/bully2.jpg", true),
+		new ImageCommand("bully2", "/images/bully2.jpg", true),
+		new ImageCommand("bullyback", "/images/bullyback.jpg", true),
+		new ImageCommand("frenz", "/images/frenz.jpg", false),
+		new ImageCommand("spicken", "/images/spicken.jpg", true),
+		new ImageCommand("teacher", "/images/teacher.jpg", true),
+		new ImageCommand("tease", "/images/tease.jpg", true),
 		new RateHotCommand("ratehot", 1),
 		new RateHotCommand("rankhot", 5),
 		new RateHotCommand("rankhotfull", 0)
